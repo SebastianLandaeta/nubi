@@ -1,0 +1,106 @@
+/* Fondo para el componente Home */
+.home {
+    min-height: 100vh;
+    background-image: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* imagen hero siempre debajo del navbar; --navbar-height puede definirse en el navbar */
+.hero-image {
+    width: 100%;
+    display: flex;
+    object-fit: contain;
+}
+
+.hero-container {
+    position: relative;
+    width: 100%;
+}
+
+.hero-overlay-text {
+    position: absolute;
+    top: 40%;           /* puedes ajustar altura */
+    left: 70%;
+    transform: translate(-50%, -50%);
+    text-align: left;
+    width: 100%;
+    padding: 0 1rem;
+}
+
+.hero-overlay-text h1 {
+    font-size: 3rem;
+    color: #44413A;
+    font-weight: 800;
+    line-height: 1.1; /* 🔥 reduce el espacio entre líneas */
+    margin: 0;        /* elimina márgenes extra */
+}
+
+.hero-overlay-text h2 {
+    line-height: 1.;
+    margin: 0;
+}
+
+h1, h2 {
+    font-family: 'Nunito', sans-serif;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #44413A;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #626263;
+}
+
+.home-button {
+    width: 300px; /* ajusta según tu diseño */
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* ✨ EFECTO HOVER */
+.home-button:hover {
+    opacity: 0.7;
+}
+
+.footer-container {
+    position: relative;
+    width: 100%;
+}
+
+.footer-image {
+    width: 100%;
+    display: flex;
+    object-fit: contain;
+}
+
+p.footer-text {
+    text-align: left;
+    color: #626263;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    margin: 0;
+}
+
+/* botones posicionados encima del footer */
+.footer-buttons {
+    position: absolute;
+    top: 40%; /* ajusta verticalmente */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    width: 100%;
+}
+
+/* opcional: tamaño distinto para los botones en el footer */
+.footer-buttons .home-button {
+    width: 250px;
+}
