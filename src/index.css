@@ -1,24 +1,15 @@
-/* Global font: use Nunito everywhere in the app */
-:root {
-	--font-family-base: 'Nunito';
-}
-
 html, body, #root {
+	font-family: 'Nunito', sans-serif;
 	height: 100%;
 	margin: 0;
-	font-family: var(--font-family-base);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	overflow-x: hidden;
 }
 
 /* Ensure all elements and pseudo-elements inherit the font */
 *, *::before, *::after {
 	box-sizing: border-box;
 	font-family: inherit;
-}
-
-/* Form elements should inherit the same font */
-input, button, textarea, select {
-	font: inherit;
 }
 

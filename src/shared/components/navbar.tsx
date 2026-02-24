@@ -9,7 +9,7 @@ const Navbar = () => {
 
         {/* Logo que lleva al inicio */}
         <Link to="/" className="navbar-logo">
-          <img src={logo} alt="Logo Nubi" />
+          <img src={logo} alt="Logo Nubi" draggable={false} />
         </Link>
 
         {/* Links de navegación */}
