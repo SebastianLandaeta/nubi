@@ -1,0 +1,21 @@
+.footer {
+    position: relative; /* Establece el contexto para el posicionamiento absoluto del texto */
+}
+
+.linea {
+    display: block;     /* Para evitar espacios no deseados debajo de la imagen */
+    width: 100%;        /* Ajusta según el ancho deseado */
+    height: auto;       /* Mantiene la proporción */
+}
+
+.footer-text {
+    font-family: 'Nunito', sans-serif;
+    color: #636362;
+    font-style: italic;
+    font-size: 1.4rem;
+    position: absolute;
+    left: 1%;            /* Alinea a la izquierda, puedes cambiarlo según necesites */
+    top: 30%;           /* Coloca la parte superior del texto en el 50% de la altura del footer */
+    transform: translateY(-50%); /* Desplaza el texto hacia arriba la mitad de su propia altura */
+    text-align: left;   /* Mantiene el texto alineado a la izquierda */
+}

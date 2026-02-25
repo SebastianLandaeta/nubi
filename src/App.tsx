@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./home/home";
+import Home from "./pages/home/home";
+import Chatbot from "./pages/chatbot/chatbot";
 
 function About() { return <h1>About</h1>; }
 
@@ -8,7 +9,8 @@ export default function App() {
     <div>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/chat" element={<Chatbot />} />
+        <Route path="/acerca" element={<About />} />
       </Routes>
     </div>
   );

@@ -1,10 +1,9 @@
-/* Fondo para el componente Home */
 .home {
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: 'Nunito', sans-serif;
+    flex-direction: column; /* Todos los elementos se ordenan verticalmente */
+    align-items: center; /* Centra horizontalmente */
+    font-family: 'Nunito', sans-serif; /* Fuente que usará todo el home */
 }
 
 /* Contenedor del hero */
@@ -15,7 +14,6 @@
 /* imagen hero siempre debajo del navbar */
 .hero-image {
     width: 100%;
-    display: block;
     height: auto;
     object-fit: contain;
 }
@@ -44,12 +42,12 @@ h2 {
 
 .hero-overlay-text h1 {
     font-size: 3rem;
-    font-weight: 800;
-    line-height: 1.1;
+    font-weight: 800; /* Aumenta el grosor del texto*/
+    line-height: 1.1; /* Espacio entre lineas */
 }
 
 .hero-overlay-text h2 {
-    line-height: 1.1;
+    line-height: 1.1; /* Espacio entre lineas */
 }
 
 /* Texto debajo del hero */
@@ -69,9 +67,8 @@ h2 {
 }
 
 /* Nubes de fondo del footer */
-.footer-image {
+.nubes-abajo-image {
     width: 100%;
-    display: block;
     object-fit: contain;
 }
 
@@ -98,17 +95,6 @@ h2 {
 /* Efecto en los botones*/
 .home-button:hover {
     opacity: 0.7;
-}
-
-/* TEXTO FOOTER */
-.footer-text {
-    position: absolute;
-    text-align: left;
-    color: #626263;
-    font-size: 1.2rem;
-    font-style: italic;
-    top: 90%;
-    margin: 0;
 }
 
 /* evitar que imágenes se desborden */

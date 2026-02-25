@@ -1,11 +1,12 @@
-import NavBar from '../shared/components/navbar';
+import NavBar from '../../shared/components/navbar';
+import Footer from '../../shared/components/footer';
 import { Link } from 'react-router-dom';
-import hero from '../assets/hero.png';
-import footer from '../assets/footer.png';
-import chatBtn from '../assets/chat-btn.png';
-import juegosBtn from '../assets/juegos-btn.png';
-import acercaBtn from '../assets/acerca-btn.png';
-import './styles/home.css';
+import hero from './assets/hero.png';
+import nubesAbajo from './assets/nubes-abajo.png';
+import chatBtn from './assets/chat-btn.png';
+import juegosBtn from './assets/juegos-btn.png';
+import acercaBtn from './assets/acerca-btn.png';
+import './home.css';
 
 export default function Home() {
   return (
@@ -15,7 +16,6 @@ export default function Home() {
       <div className="hero-container">
         <img src={hero} alt="Hero" className="hero-image" draggable={false} />
 
-        {/* TEXTO ENCIMA DEL HERO */}
         <div className="hero-overlay-text">
           <h1>La Inteligencia Artificial Educativa</h1>
           <h2>Diviértete con NUBI, tu robot amigo para aprender.</h2>
@@ -28,7 +28,7 @@ export default function Home() {
       </div>
       
       <div className="footer-container">
-        <img src={footer} alt="Footer" className="footer-image" draggable={false} />
+        <img src={nubesAbajo} alt="Nubes-abajo" className="nubes-abajo-image" draggable={false} />
 
         {/* BOTONES SOBRE EL FOOTER */}
         <div className="footer-buttons">
@@ -42,9 +42,8 @@ export default function Home() {
             <img src={acercaBtn} className="home-button" alt="Acerca de Nubi" />
           </Link>
         </div>
-
-        <p className="footer-text">© 2025 NUBI - Todos los derechos reservados</p>
       </div>
+      <Footer />
     </div>
   );
 }
