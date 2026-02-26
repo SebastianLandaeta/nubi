@@ -1,3 +1,109 @@
 .chat {
-    font-family: 'Nunito', sans-serif; /* Fuente que usará todo el chatbot */
+  font-family: 'Nunito', sans-serif; /* Fuente que usará todo el chatbot */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+
+  border: 4px dashed #A4D0EA;
+  border-radius: 25px;
+  background: #ffffff;
+
+  margin: 20px auto;
+  max-width: 900px;
+
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.message {
+  display: flex;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.message.model {
+  justify-content: flex-start;
+}
+
+.bubble {
+  max-width: 70%;
+  padding: 10px 15px;
+  border-radius: 20px;
+  background: #f1f1f1;
+  word-wrap: break-word;
+}
+
+.message.user .bubble {
+  background: #007bff;
+  color: white;
+}
+
+.typing {
+  font-style: italic;
+  color: #666;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.input-area {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background: white;
+  border-top: 1px solid #ccc;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.input-area button {
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.input-area button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.speak-btn {
+  margin-left: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.speak-btn:hover {
+  transform: scale(1.2);
 }
