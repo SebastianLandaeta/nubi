@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NavBar from "../../shared/components/navbar";
 import Footer from "../../shared/components/footer";
 import { GoogleGenAI } from "@google/genai";
@@ -16,7 +16,7 @@ export default function Chatbot() {
     {
       role: "model",
       content:
-        "Hola Soy NUBI, tu robot amigo con inteligencia artificial. ¿En qué puedo ayudarte hoy?",
+        "Hola, Soy NUBI, tu robot amigo con inteligencia artificial. ¿En qué puedo ayudarte hoy?",
     },
   ]);
 
@@ -24,8 +24,57 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Estados para grabación de voz
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
+  const [recognitionSupported, setRecognitionSupported] = useState(true);
+
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   const ai = new GoogleGenAI({ apiKey });
+
+  // Inicializar reconocimiento de voz
+  useEffect(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setRecognitionSupported(false);
+      return;
+    }
+
+    const recognitionInstance = new SpeechRecognition();
+    recognitionInstance.lang = "es-ES";
+    recognitionInstance.interimResults = false;
+    recognitionInstance.maxAlternatives = 1;
+
+    recognitionInstance.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript); // Coloca el texto transcrito en el input
+    };
+
+    recognitionInstance.onend = () => {
+      setIsRecording(false);
+    };
+
+    recognitionInstance.onerror = (event: any) => {
+      console.error("Error en reconocimiento de voz:", event.error);
+      setIsRecording(false);
+      if (event.error === "not-allowed") {
+        setError("Permiso de micrófono denegado. Por favor, permite el acceso al micrófono.");
+      } else if (event.error === "network") {
+        setError("Error de red. Verifica tu conexión a internet o la configuración de seguridad (CSP).");
+      } else {
+        setError("Error al grabar audio. Código: " + event.error);
+      }
+    };
+
+    setRecognition(recognitionInstance);
+
+    // Limpiar al desmontar
+    return () => {
+      if (recognitionInstance) {
+        recognitionInstance.abort();
+      }
+    };
+  }, []);
 
   // Función que devuelve una promesa con las voces cuando estén listas
   const waitForVoices = (): Promise<SpeechSynthesisVoice[]> => {
@@ -34,24 +83,19 @@ export default function Chatbot() {
       if (voices.length > 0) {
         resolve(voices);
       } else {
-        // Si aún no hay voces, esperamos el evento 'voiceschanged'
         window.speechSynthesis.onvoiceschanged = () => {
           resolve(window.speechSynthesis.getVoices());
-          window.speechSynthesis.onvoiceschanged = null; // Limpiamos el evento
+          window.speechSynthesis.onvoiceschanged = null;
         };
       }
     });
   };
 
-  // Función speak actualizada (ahora asíncrona)
+  // Función para hablar el texto usando la voz
   const speak = async (text: string) => {
-    // Cancelar cualquier audio anterior
     window.speechSynthesis.cancel();
 
-    // Esperar a que las voces estén cargadas
     const voices = await waitForVoices();
-
-    // Buscar la voz de Marcelo (ajusta el nombre si es necesario)
     const marceloVoice = voices.find((v) =>
       v.name.toLowerCase().includes("marcelo")
     );
@@ -67,7 +111,7 @@ export default function Chatbot() {
     window.speechSynthesis.speak(utterance);
   };
 
-  // 🛑 filtro infantil
+  // filtro infantil
   const isSafeForKids = (text: string) => {
     const forbiddenWords = [
       "sexo",
@@ -84,14 +128,44 @@ export default function Chatbot() {
       "gore",
       "violar",
     ];
-
     return !forbiddenWords.some((word) =>
       text.toLowerCase().includes(word)
     );
   };
 
-  const handleSend = async (voiceText?: string) => {
-    const textToSend = voiceText ?? input;
+  // Funciones para controlar grabación
+  const toggleRecording = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
+  const startRecording = () => {
+    if (!recognition) {
+      setError("Reconocimiento de voz no soportado en este navegador.");
+      return;
+    }
+    setError(null);
+    try {
+      recognition.start();
+      setIsRecording(true);
+    } catch (err) {
+      console.error(err);
+      setError("No se pudo iniciar la grabación.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (recognition) {
+      recognition.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const handleSend = async () => {
+    const textToSend = input;
 
     if (!textToSend.trim()) return;
 
@@ -124,7 +198,7 @@ export default function Chatbot() {
         parts: [
           {
             text: `Eres Nubi, un robot amigable para niños de 3 a 5 años.
-            Usa lenguaje simple, frases cortas y no uses emojis.
+            Usa lenguaje simple, frases cortas y nunca uses emojis.
             Nunca hables de temas peligrosos o inapropiados.`,
           },
         ],
@@ -197,17 +271,26 @@ export default function Chatbot() {
 
         <div className="input-area">
           <input
+            id="input"
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) =>
-              e.key === "Enter" && handleSend()
-            }
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
             placeholder="Escribe tu pregunta..."
             disabled={loading}
           />
 
-          <button onClick={() => handleSend()} disabled={loading}>
+          {/* Botón de micrófono */}
+          <button
+            type="button"
+            onClick={toggleRecording}
+            disabled={loading || !recognitionSupported}
+            className={`mic-btn ${isRecording ? "recording" : ""}`}
+          >
+            {isRecording ? "⏹️" : "🎤"}
+          </button>
+
+          <button onClick={handleSend} disabled={loading || isRecording}>
             Enviar
           </button>
         </div>

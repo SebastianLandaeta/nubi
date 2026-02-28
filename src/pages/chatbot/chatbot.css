@@ -107,3 +107,22 @@
 .speak-btn:hover {
   transform: scale(1.2);
 }
+
+.mic-btn {
+  padding: 10px 20px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.mic-btn.recording {
+  background: #dc3545;
+}
+
+.mic-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
