@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/home/home";
 import Chatbot from "./pages/chatbot/chatbot";
+import MiniGames from "./pages/minigames/minigames";
+import WordSearch from "./pages/minigames/word-search/word-search";
 
 function About() { return <h1>About</h1>; }
 
@@ -10,6 +12,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/chat" element={<Chatbot />} />
+        <Route path="/minijuegos" element={<MiniGames />} />
+        <Route path="/minijuegos/sopa-de-letras" element={<WordSearch />} />
         <Route path="/acerca" element={<About />} />
       </Routes>
     </div>

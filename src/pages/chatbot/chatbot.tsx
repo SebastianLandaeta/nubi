@@ -142,6 +142,7 @@ export default function Chatbot() {
     }
   };
 
+  // Empezar a grabar, con manejo de errores
   const startRecording = () => {
     if (!recognition) {
       setError("Reconocimiento de voz no soportado en este navegador.");
@@ -157,6 +158,7 @@ export default function Chatbot() {
     }
   };
 
+  // Detener grabación
   const stopRecording = () => {
     if (recognition) {
       recognition.stop();
@@ -164,6 +166,7 @@ export default function Chatbot() {
     }
   };
 
+  // Función para enviar mensaje y obtener respuesta de la IA
   const handleSend = async () => {
     const textToSend = input;
 
@@ -193,7 +196,7 @@ export default function Chatbot() {
     setError(null);
 
     try {
-      const systemInstruction = {
+      const systemInstruction = { // Reglas y comportamiento del robot
         role: "model",
         parts: [
           {
@@ -204,7 +207,7 @@ export default function Chatbot() {
         ],
       };
 
-      const history = [
+      const history = [ 
         systemInstruction,
         ...messages.map((msg) => ({
           role: msg.role,
@@ -214,7 +217,7 @@ export default function Chatbot() {
       ];
 
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-3-flash-preview", // Modelo Gemini a utilizar
         contents: history,
       });
 
@@ -242,7 +245,7 @@ export default function Chatbot() {
 
       <img src={nubesArriba} alt="Nubes arriba" draggable={false} />
 
-      <div className="chat-container marco">
+      <div className="chat-container">
         <div className="messages">
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.role}`}>

@@ -35,11 +35,11 @@
   display: flex;
 }
 
-.message.user {
+.message.user { /* Mensaje del usuario */
   justify-content: flex-end;
 }
 
-.message.model {
+.message.model { /* Mensaje del robot */
   justify-content: flex-start;
 }
 
@@ -56,7 +56,7 @@
   color: white;
 }
 
-.typing {
+.typing { /* Nubi está pensando... */
   font-style: italic;
   color: #666;
 }

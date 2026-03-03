@@ -35,7 +35,7 @@ export default function Home() {
           <Link to="/chat" aria-label="Chat IA">
             <img src={chatBtn} className="home-button" alt="Chat IA" />
           </Link>
-          <Link to="/juegos" aria-label="Minijuegos">
+          <Link to="/minijuegos" aria-label="Minijuegos">
             <img src={juegosBtn} className="home-button" alt="Minijuegos" />
           </Link>
           <Link to="/acerca" aria-label="Acerca de Nubi">
