@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Phaser from 'phaser';
-import { WordSearchGame } from './word-search-game';
+import { MenuScene } from './scenes/menu-scene';
+import { GameScene } from './scenes/game-scene';
 import Navbar from '../../../shared/components/navbar';
 import Footer from '../../../shared/components/footer';
 import './word-search.css';
@@ -17,14 +18,9 @@ export default function WordSearch() {
       width: 800,
       height: 600,
       parent: gameRef.current,      // El div donde se montará el canvas
-      scene: WordSearchGame,
-      physics: {
-        default: 'arcade',
-        arcade: {
-          gravity: { x: 0, y: 200 },
-        }
-      },
-      backgroundColor: '#000000'
+      scene: [MenuScene, GameScene],
+      physics: { default: 'arcade' },
+      backgroundColor: '#2d2d2d',
     };
 
     gameInstance.current = new Phaser.Game(config);
