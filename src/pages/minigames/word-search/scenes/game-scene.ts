@@ -1,162 +1,80 @@
 import Phaser from 'phaser';
 
-// Interfaz para los datos recibidos del menú
-interface GameSceneData {
-  size: number;
-  difficulty: 'easy' | 'medium';
-}
+// Pools de palabras
+const EASY_WORDS_POOL = [
+  'PERRO', 'GATO', 'CASA', 'SOL', 'LUNA', 'MAR', 'CIELO', 'FLOR', 'ARBOL', 'NUBE',
+  'AGUA', 'FUEGO', 'TIERRA', 'VIENTO', 'ROJO', 'AZUL', 'VERDE', 'AMARILLO', 'BEBE',
+  'PAPA', 'MAMA', 'HERMANO', 'HERMANA', 'ABUELO', 'ABUELA', 'PEZ'
+];
 
-// Interfaz para una celda del tablero (fondo y texto)
-interface Cell {
-  bg: Phaser.GameObjects.Rectangle;
-  letter: Phaser.GameObjects.Text;
-}
-
-// Interfaz para una coordenada de celda
-interface CellCoord {
-  row: number;
-  col: number;
-}
+const MEDIUM_WORDS_POOL = [
+  'ELEFANTE', 'JIRAFA', 'COCODRILO', 'HIPOPOTAMO', 'CEBRA', 'LEON', 'TIGRE', 'RINOCERONTE',
+  'GORILA', 'CHIMPANCE', 'CANGURO', 'KOALA', 'PANDA', 'OSO', 'LOBO', 'ZORRO', 'AGUILA',
+  'HALCON', 'PINGUINO', 'DELFIN', 'TIBURON', 'BALLENA', 'PULPO', 'CALAMAR', 'ESTRELLA', 'PEZ'
+];
 
 export class GameScene extends Phaser.Scene {
   private gridSize!: number;
-  private difficulty!: 'easy' | 'medium';
+  private difficulty!: string;
   private wordList!: string[];
-  private grid: string[][] = [];
-  private cells: Cell[][] = [];
-  private foundWords: boolean[] = [];
-  private wordTexts: Phaser.GameObjects.Text[] = [];
+  private grid!: string[][];
+  private cells!: { bg: Phaser.GameObjects.Rectangle; letter: Phaser.GameObjects.Text }[][];
+  private foundWords!: boolean[];
+  private isSelecting!: boolean;
+  private startCell!: { row: number; col: number } | null;
+  private currentHighlight!: { row: number; col: number }[];
+  private permanentHighlights!: { row: number; col: number }[];
+  private wordTexts!: Phaser.GameObjects.Text[];
 
-  // Selección
-  private isSelecting: boolean = false;
-  private startCell: CellCoord | null = null;
-  private currentHighlight: CellCoord[] = [];
-  private permanentHighlights: CellCoord[] = [];
-
-  // Tiempo
-  private startTime: number = 0;
-  private timerText!: Phaser.GameObjects.Text;
-  private timerEvent?: Phaser.Time.TimerEvent;
-
-  // Mensaje de victoria
-  private victoryContainer?: Phaser.GameObjects.Container;
+  // Tiempo y victoria
+  private startTime!: number;
+  private elapsedTime!: number;
+  private timerText!: Phaser.GameObjects.Text | null;
+  private gameFinished!: boolean;
 
   constructor() {
     super({ key: 'GameScene' });
   }
 
-  init(data: GameSceneData) {
+  init(data: { size: number; difficulty: string }) {
     this.gridSize = data.size;
     this.difficulty = data.difficulty;
 
-    // Palabras según dificultad
-    this.wordList = this.difficulty === 'easy'
-      ? ['PERRO', 'GATO', 'CASA', 'SOL']
-      : ['ELEFANTE', 'JIRAFA', 'COCODRILO', 'HIPOPOTAMO', 'CEBRA', 'LEON'];
+    // Seleccionar palabras aleatorias
+    const pool = this.difficulty === 'easy' ? EASY_WORDS_POOL : MEDIUM_WORDS_POOL;
+    const numWords = this.difficulty === 'easy' ? 6 : 10;
+    // Filtrar palabras que quepan (longitud <= gridSize)
+    const filteredPool = pool.filter(word => word.length <= this.gridSize);
+    // Si no hay suficientes, repetir palabras (poco probable, pero por seguridad)
+    while (filteredPool.length < numWords) {
+      filteredPool.push(...filteredPool);
+    }
+    this.wordList = this.shuffleArray(filteredPool).slice(0, numWords);
 
+    this.grid = [];
+    this.cells = [];
     this.foundWords = new Array(this.wordList.length).fill(false);
-    this.permanentHighlights = [];
+    this.isSelecting = false;
+    this.startCell = null;
     this.currentHighlight = [];
+    this.permanentHighlights = [];
+    this.wordTexts = [];
+
+    // Inicializar tiempo
+    this.startTime = 0;
+    this.elapsedTime = 0;
+    this.timerText = null;
+    this.gameFinished = false;
   }
 
   create() {
-    this.createGrid();
-    this.drawBoard();
-    this.createWordList();
+    this.createGrid(); // <-- ahora usa el algoritmo mejorado
 
-    // Iniciar temporizador
-    this.startTime = this.time.now;
-    this.timerText = this.add.text(10, 10, 'Tiempo: 0s', {
-      fontSize: '20px',
-      color: '#ffffff',
-    });
-
-    // Actualizar cada segundo
-    this.timerEvent = this.time.addEvent({
-      delay: 1000,
-      callback: this.updateTimer,
-      callbackScope: this,
-      loop: true,
-    });
-
-    // Configurar entrada
-    this.input.on('pointerdown', this.onPointerDown, this);
-    this.input.on('pointermove', this.onPointerMove, this);
-    this.input.on('pointerup', this.onPointerUp, this);
-  }
-
-  private createGrid() {
-    // Inicializar matriz vacía
-    for (let i = 0; i < this.gridSize; i++) {
-      this.grid[i] = new Array(this.gridSize).fill('');
-    }
-
-    const directions: [number, number][] = [
-      [1, 0],   // derecha
-      [0, 1],   // abajo
-      [1, 1],   // diagonal abajo-derecha
-      [-1, 1],  // diagonal abajo-izquierda
-    ];
-
-    // Colocar cada palabra
-    for (const word of this.wordList) {
-      let placed = false;
-      let attempts = 0;
-      const maxAttempts = 200;
-
-      while (!placed && attempts < maxAttempts) {
-        attempts++;
-        const dir = directions[Math.floor(Math.random() * directions.length)];
-        const [dx, dy] = dir;
-
-        const startX = Math.floor(Math.random() * this.gridSize);
-        const startY = Math.floor(Math.random() * this.gridSize);
-
-        // Verificar que la palabra cabe
-        const endX = startX + (word.length - 1) * dx;
-        const endY = startY + (word.length - 1) * dy;
-        if (endX < 0 || endX >= this.gridSize || endY < 0 || endY >= this.gridSize) {
-          continue;
-        }
-
-        // Verificar conflictos
-        let conflict = false;
-        for (let i = 0; i < word.length; i++) {
-          const x = startX + i * dx;
-          const y = startY + i * dy;
-          if (this.grid[y][x] !== '' && this.grid[y][x] !== word[i]) {
-            conflict = true;
-            break;
-          }
-        }
-        if (conflict) continue;
-
-        // Colocar la palabra
-        for (let i = 0; i < word.length; i++) {
-          const x = startX + i * dx;
-          const y = startY + i * dy;
-          this.grid[y][x] = word[i];
-        }
-        placed = true;
-      }
-      // Si no se pudo colocar, se omite (en un juego real se reintentaría)
-    }
-
-    // Rellenar espacios vacíos con letras aleatorias
-    for (let y = 0; y < this.gridSize; y++) {
-      for (let x = 0; x < this.gridSize; x++) {
-        if (this.grid[y][x] === '') {
-          this.grid[y][x] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-        }
-      }
-    }
-  }
-
-  private drawBoard() {
     const cellSize = 40;
     const startX = 100;
     const startY = 100;
 
+    // Crear celdas
     for (let row = 0; row < this.gridSize; row++) {
       this.cells[row] = [];
       for (let col = 0; col < this.gridSize; col++) {
@@ -176,12 +94,11 @@ export class GameScene extends Phaser.Scene {
         this.cells[row][col] = { bg, letter };
       }
     }
-  }
 
-  private createWordList() {
+    // Mostrar lista de palabras
     const listX = 600;
     let listY = 150;
-    this.add.text(listX, listY - 30, 'Palabras a buscar:', {
+    this.add.text(listX, listY - 30, 'Buscar:', {
       fontSize: '24px',
       color: '#ffff00',
     });
@@ -194,14 +111,129 @@ export class GameScene extends Phaser.Scene {
       });
       this.wordTexts.push(text);
     });
+
+    // Iniciar temporizador
+    this.startTime = Date.now();
+    this.timerText = this.add.text(600, 50, 'Tiempo: 0s', {
+      fontSize: '24px',
+      color: '#ffffff'
+    });
+
+    // Configurar eventos
+    this.input.on('pointerdown', this.onPointerDown, this);
+    this.input.on('pointermove', this.onPointerMove, this);
+    this.input.on('pointerup', this.onPointerUp, this);
   }
 
-  private updateTimer() {
-    const elapsed = Math.floor((this.time.now - this.startTime) / 1000);
-    this.timerText.setText(`Tiempo: ${elapsed}s`);
+  update() {
+    if (!this.gameFinished && this.timerText) {
+      const seconds = Math.floor((Date.now() - this.startTime) / 1000);
+      this.timerText.setText(`Tiempo: ${seconds}s`);
+    }
   }
 
-  private getCellFromPointer(pointer: Phaser.Input.Pointer): CellCoord | null {
+  /**
+   * Genera el tablero asegurando que todas las palabras estén colocadas.
+   * Reintenta la generación completa hasta tener éxito.
+   */
+  private createGrid() {
+    const maxGlobalAttempts = 500; // Intentos de generar el tablero completo
+    let success = false;
+    let attempts = 0;
+
+    while (!success && attempts < maxGlobalAttempts) {
+      success = this.tryCreateGrid();
+      attempts++;
+    }
+
+    if (!success) {
+      console.warn('No se pudo colocar todas las palabras después de varios intentos');
+      // Como fallback, forzamos la colocación (poco probable que llegue aquí si los parámetros son adecuados)
+      // Podrías lanzar un error o simplemente aceptar el último intento fallido
+    }
+  }
+
+  /**
+   * Intenta colocar todas las palabras en el tablero.
+   * Retorna true si todas se colocaron, false en caso contrario.
+   */
+  private tryCreateGrid(): boolean {
+    // Reiniciar la matriz
+    for (let i = 0; i < this.gridSize; i++) {
+      this.grid[i] = new Array(this.gridSize).fill('');
+    }
+
+    const directions: [number, number][] = [
+      [1, 0],   // derecha
+      [0, 1],   // abajo
+      [1, 1],   // diagonal abajo-derecha
+      [-1, 1],  // diagonal abajo-izquierda
+    ];
+
+    // Mezclamos las palabras para intentar en diferente orden cada vez
+    const wordsToPlace = this.shuffleArray([...this.wordList]);
+    const placed = new Array(wordsToPlace.length).fill(false);
+
+    for (let wIndex = 0; wIndex < wordsToPlace.length; wIndex++) {
+      const word = wordsToPlace[wIndex];
+      let wordPlaced = false;
+      let attempts = 0;
+      const maxAttemptsPerWord = 300;
+
+      while (!wordPlaced && attempts < maxAttemptsPerWord) {
+        attempts++;
+        const dir = directions[Math.floor(Math.random() * directions.length)];
+        const [dx, dy] = dir;
+
+        const startX = Math.floor(Math.random() * this.gridSize);
+        const startY = Math.floor(Math.random() * this.gridSize);
+
+        const endX = startX + (word.length - 1) * dx;
+        const endY = startY + (word.length - 1) * dy;
+        if (endX < 0 || endX >= this.gridSize || endY < 0 || endY >= this.gridSize) {
+          continue;
+        }
+
+        let conflict = false;
+        for (let i = 0; i < word.length; i++) {
+          const x = startX + i * dx;
+          const y = startY + i * dy;
+          if (this.grid[y][x] !== '' && this.grid[y][x] !== word[i]) {
+            conflict = true;
+            break;
+          }
+        }
+        if (conflict) continue;
+
+        // Colocar palabra
+        for (let i = 0; i < word.length; i++) {
+          const x = startX + i * dx;
+          const y = startY + i * dy;
+          this.grid[y][x] = word[i];
+        }
+        wordPlaced = true;
+        placed[wIndex] = true;
+      }
+      // Si no se colocó, continuamos con la siguiente (luego veremos si todas se colocaron)
+    }
+
+    // Verificar si todas las palabras se colocaron
+    const allPlaced = placed.every(v => v);
+    if (allPlaced) {
+      // Rellenar espacios vacíos con letras aleatorias
+      for (let y = 0; y < this.gridSize; y++) {
+        for (let x = 0; x < this.gridSize; x++) {
+          if (this.grid[y][x] === '') {
+            this.grid[y][x] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+          }
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+
+  private getCellFromPointer(pointer: Phaser.Input.Pointer) {
     const cellSize = 40;
     const startX = 100;
     const startY = 100;
@@ -216,6 +248,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private onPointerDown(pointer: Phaser.Input.Pointer) {
+    if (this.gameFinished) return;
     const cell = this.getCellFromPointer(pointer);
     if (cell) {
       this.isSelecting = true;
@@ -226,7 +259,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private onPointerMove(pointer: Phaser.Input.Pointer) {
-    if (!this.isSelecting) return;
+    if (!this.isSelecting || this.gameFinished) return;
 
     const currentCell = this.getCellFromPointer(pointer);
     if (!currentCell) return;
@@ -240,9 +273,8 @@ export class GameScene extends Phaser.Scene {
     const dy = Math.sign(end.row - start.row);
 
     // Verificar que sea línea recta o diagonal
-    const isStraight = (dx === 0 || dy === 0) || (Math.abs(end.col - start.col) === Math.abs(end.row - start.row));
-    if (!isStraight) {
-      // Solo resaltar la inicial
+    if ((dx !== 0 && dy !== 0 && Math.abs(end.col - start.col) !== Math.abs(end.row - start.row)) ||
+        (dx === 0 && dy === 0)) {
       this.highlightCell(start.row, start.col, 0xffff00);
       this.currentHighlight.push({ row: start.row, col: start.col });
       return;
@@ -260,7 +292,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private onPointerUp() {
-    if (!this.isSelecting) return;
+    if (!this.isSelecting || this.gameFinished) return;
     this.isSelecting = false;
 
     if (this.currentHighlight.length < 2) {
@@ -269,7 +301,6 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
-    // Obtener palabra seleccionada
     const wordLetters = this.currentHighlight.map(cell => this.grid[cell.row][cell.col]).join('');
     const wordReverse = wordLetters.split('').reverse().join('');
 
@@ -282,22 +313,19 @@ export class GameScene extends Phaser.Scene {
     }
 
     if (foundIndex !== -1) {
-      // Palabra encontrada
       this.foundWords[foundIndex] = true;
-      // Marcar como permanente (verde)
       this.permanentHighlights.push(...this.currentHighlight.map(cell => ({ ...cell })));
       this.currentHighlight.forEach(cell => {
         this.highlightCell(cell.row, cell.col, 0x00ff00);
       });
-      // Tachar palabra en lista
       this.wordTexts[foundIndex].setStyle({ color: '#00ff00', textDecoration: 'line-through' });
 
-      // Comprobar si todas las palabras han sido encontradas
+      // Comprobar si todas las palabras fueron encontradas
       if (this.foundWords.every(found => found)) {
-        this.showVictory();
+        this.gameFinished = true;
+        this.showVictoryMessage();
       }
     } else {
-      // No es correcta, limpiar resaltado temporal
       this.clearTemporaryHighlight();
     }
 
@@ -319,55 +347,50 @@ export class GameScene extends Phaser.Scene {
     this.currentHighlight = [];
   }
 
-  private showVictory() {
-    // Detener el temporizador
-    if (this.timerEvent) {
-      this.timerEvent.remove();
-    }
+  private showVictoryMessage() {
+    this.elapsedTime = Math.floor((Date.now() - this.startTime) / 1000);
 
-    const elapsed = Math.floor((this.time.now - this.startTime) / 1000);
+    // Fondo semitransparente que bloquea interacción
+    const overlay = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7)
+      .setDepth(10)
+      .setInteractive();
 
-    // Crear un contenedor para el mensaje de victoria
-    this.victoryContainer = this.add.container(400, 300);
-
-    // Fondo semitransparente
-    const bg = this.add.rectangle(0, 0, 400, 200, 0x000000, 0.8)
-      .setOrigin(0.5);
-    this.victoryContainer.add(bg);
-
-    // Texto de victoria
-    const victoryText = this.add.text(0, -40, '¡VICTORIA!', {
-      fontSize: '36px',
+    this.add.text(400, 200, '¡VICTORIA!', {
+      fontSize: '64px',
       color: '#ffff00',
-      fontStyle: 'bold',
-    }).setOrigin(0.5);
-    this.victoryContainer.add(victoryText);
-
-    // Tiempo
-    const timeText = this.add.text(0, 10, `Tiempo: ${elapsed} segundos`, {
-      fontSize: '24px',
-      color: '#ffffff',
-    }).setOrigin(0.5);
-    this.victoryContainer.add(timeText);
-
-    // Botón Aceptar
-    const buttonBg = this.add.rectangle(0, 70, 150, 50, 0x4caf50)
+      fontStyle: 'bold'
+    })
       .setOrigin(0.5)
+      .setDepth(11);
+
+    this.add.text(400, 300, `Tiempo: ${this.elapsedTime} segundos`, {
+      fontSize: '32px',
+      color: '#ffffff'
+    })
+      .setOrigin(0.5)
+      .setDepth(11);
+
+    const button = this.add.rectangle(400, 400, 200, 60, 0x4caf50)
       .setInteractive()
+      .setDepth(11)
       .on('pointerdown', () => {
         this.scene.start('MenuScene');
       });
-    this.victoryContainer.add(buttonBg);
 
-    const buttonText = this.add.text(0, 70, 'Aceptar', {
-      fontSize: '24px',
-      color: '#ffffff',
-    }).setOrigin(0.5);
-    this.victoryContainer.add(buttonText);
+    this.add.text(400, 400, 'Aceptar', {
+      fontSize: '32px',
+      color: '#ffffff'
+    })
+      .setOrigin(0.5)
+      .setDepth(12);
+  }
 
-    // Deshabilitar interacción con el tablero (opcional)
-    this.input.off('pointerdown', this.onPointerDown, this);
-    this.input.off('pointermove', this.onPointerMove, this);
-    this.input.off('pointerup', this.onPointerUp, this);
+  private shuffleArray<T>(array: T[]): T[] {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
   }
 }

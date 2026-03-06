@@ -1,3 +1,26 @@
 .minijuegos {
     font-family: 'Nunito', sans-serif;
 }
+
+.minigame-button {
+    background: transparent;
+    border: 2px solid #626263;
+    border-radius: 12px;
+    padding: 0;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin-bottom: 2rem;   /* Ajusta este valor: 2rem, 30px, etc. */
+}
+
+.minigame-button img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
