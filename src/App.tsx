@@ -3,8 +3,7 @@ import Home from "./pages/home/home";
 import Chatbot from "./pages/chatbot/chatbot";
 import MiniGames from "./pages/minigames/minigames";
 import WordSearch from "./pages/minigames/word-search/word-search";
-
-function About() { return <h1>About</h1>; }
+import About from "./pages/about/about";
 
 export default function App() {
   return (

@@ -1,0 +1,43 @@
+.about {
+    font-family: 'Nunito', sans-serif;
+    box-sizing: border-box;
+}
+
+/* Estilo común para los elementos enmarcados */
+.about h1,
+.que,
+.quien,
+.objetivo {
+    border: 2px dashed #A4D0EA;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    box-sizing: border-box;
+}
+
+/* El título ocupa todo el ancho */
+.about h1 {
+    text-align: center;
+    width: 100%;
+    color: #44413A;
+}
+
+/* Cada sección individual también ocupa todo el ancho por defecto */
+.que {
+    width: 100%;
+}
+
+/* Contenedor flex para las dos secciones inferiores */
+.about .row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    margin: 20px 0;
+}
+
+/* Cada sección dentro del row ocupa el 50% */
+.about .quien,
+.about .objetivo {
+    flex: 1;
+    margin: 0; /* Eliminamos el margen superior/inferior que se heredaba */
+}
