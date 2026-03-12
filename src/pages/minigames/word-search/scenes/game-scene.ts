@@ -9,6 +9,12 @@ const MEDIUM_WORDS_POOL = [
 ];
 
 export class GameScene extends Phaser.Scene {
+  // Constantes de color
+  private readonly BASE_CELL_COLOR = 0xffffff;        // blanco
+  private readonly INCORRECT_LETTER_COLOR = 0x666666; // gris oscuro para letras incorrectas
+  private readonly TEMP_HIGHLIGHT_COLOR = 0xffff00;   // amarillo
+  private readonly PERMANENT_HIGHLIGHT_COLOR = 0x00ff00; // verde
+
   // Propiedades comunes
   private gridSize!: number;
   private difficulty!: string;
@@ -33,8 +39,9 @@ export class GameScene extends Phaser.Scene {
   private targetLetters!: string[];        // 4 letras a buscar
   private foundLetters!: boolean[];
   private letterTexts!: Phaser.GameObjects.Text[];
+  private incorrectCells!: boolean[][];    // true si la celda ya fue marcada como incorrecta
 
-  // Dimensiones del tablero (se inicializan en create)
+  // Dimensiones del tablero
   private cellSize!: number;
   private startX!: number;
   private startY!: number;
@@ -46,7 +53,7 @@ export class GameScene extends Phaser.Scene {
   init(data: { size: number; difficulty: string }) {
     this.gridSize = data.size;
     this.difficulty = data.difficulty;
-    this.isLetterMode = (this.difficulty === 'easy'); // easy = letras, medium = palabras
+    this.isLetterMode = (this.difficulty === 'easy');
 
     this.grid = [];
     this.cells = [];
@@ -71,10 +78,14 @@ export class GameScene extends Phaser.Scene {
       }
       this.foundLetters = new Array(4).fill(false);
       this.letterTexts = [];
+      // Inicializar matriz de celdas incorrectas
+      this.incorrectCells = [];
+      for (let i = 0; i < this.gridSize; i++) {
+        this.incorrectCells[i] = new Array(this.gridSize).fill(false);
+      }
     } else {
-      // Modo palabras: seleccionar 4 palabras del pool
+      // Modo palabras: seleccionar 4 palabras del pool (tablero 5x5)
       const filteredPool = MEDIUM_WORDS_POOL.filter(word => word.length <= this.gridSize);
-      // Asegurar suficientes palabras
       while (filteredPool.length < 4) {
         filteredPool.push(...filteredPool);
       }
@@ -85,30 +96,30 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
-    // Fondo de la escena
+    // Fondo azul claro
     this.cameras.main.setBackgroundColor('#578abd');
-    
+
     // Configurar dimensiones del tablero
-    this.cellSize = 50; // más grande
-    this.startX = (this.cameras.main.width - this.gridSize * this.cellSize) / 2; // centrado
-    this.startY = 100; // margen superior fijo
+    this.cellSize = 50;
+    this.startX = (this.cameras.main.width - this.gridSize * this.cellSize) / 2;
+    this.startY = 100;
 
     this.createGrid(); // Genera el tablero según el modo
 
-    // Crear celdas con las nuevas dimensiones
+    // Crear celdas con fondo blanco y letras negras
     for (let row = 0; row < this.gridSize; row++) {
       this.cells[row] = [];
       for (let col = 0; col < this.gridSize; col++) {
         const x = this.startX + col * this.cellSize + this.cellSize / 2;
         const y = this.startY + row * this.cellSize + this.cellSize / 2;
 
-        const bg = this.add.rectangle(x, y, this.cellSize - 2, this.cellSize - 2, 0xffffff)
+        const bg = this.add.rectangle(x, y, this.cellSize - 2, this.cellSize - 2, this.BASE_CELL_COLOR)
           .setOrigin(0.5)
-          .setStrokeStyle(1, 0x666666);
+          .setStrokeStyle(1, 0xcccccc); // borde gris claro
 
         const letter = this.add.text(x, y, this.grid[row][col], {
           fontSize: '29px',
-          color: '#000000',
+          color: '#000000', // letra negra
           fontFamily: 'Arial',
         }).setOrigin(0.5);
 
@@ -134,7 +145,7 @@ export class GameScene extends Phaser.Scene {
         this.letterTexts.push(text);
       });
     } else {
-      this.add.text(listX, listY - 30, 'Buscar:', {
+      this.add.text(listX, listY - 30, 'Buscar palabras:', {
         fontSize: '24px',
         color: '#ffff00',
       });
@@ -148,7 +159,7 @@ export class GameScene extends Phaser.Scene {
       });
     }
 
-    // Temporizador en la parte superior izquierda (junto al tablero)
+    // Temporizador
     this.startTime = Date.now();
     this.timerText = this.add.text(this.startX, 50, 'Tiempo: 0s', {
       fontSize: '24px',
@@ -168,9 +179,6 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  /**
-   * Genera el tablero según el modo de juego.
-   */
   private createGrid() {
     if (this.isLetterMode) {
       this.createGridForLetters();
@@ -179,17 +187,12 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  /**
-   * Modo letras: coloca las 4 letras objetivo en posiciones aleatorias
-   * y rellena el resto con letras aleatorias.
-   */
   private createGridForLetters() {
-    // Inicializar grid vacío
     for (let i = 0; i < this.gridSize; i++) {
       this.grid[i] = new Array(this.gridSize).fill('');
     }
 
-    // Colocar cada letra objetivo en una celda libre
+    // Colocar letras objetivo en posiciones aleatorias
     const positions: { row: number; col: number }[] = [];
     for (let row = 0; row < this.gridSize; row++) {
       for (let col = 0; col < this.gridSize; col++) {
@@ -213,9 +216,6 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  /**
-   * Modo palabras: coloca las palabras en la cuadrícula (reintenta hasta éxito).
-   */
   private createGridForWords() {
     const maxGlobalAttempts = 500;
     let success = false;
@@ -232,7 +232,6 @@ export class GameScene extends Phaser.Scene {
   }
 
   private tryCreateGridForWords(): boolean {
-    // Reiniciar grid
     for (let i = 0; i < this.gridSize; i++) {
       this.grid[i] = new Array(this.gridSize).fill('');
     }
@@ -311,9 +310,15 @@ export class GameScene extends Phaser.Scene {
     if (this.gameFinished) return;
     const cell = this.getCellFromPointer(pointer);
     if (cell) {
+      // En modo letras, no permitir clic en celdas incorrectas o ya encontradas
+      if (this.isLetterMode) {
+        const isPermanent = this.permanentHighlights.some(p => p.row === cell.row && p.col === cell.col);
+        const isIncorrect = this.incorrectCells[cell.row][cell.col];
+        if (isPermanent || isIncorrect) return;
+      }
       this.isSelecting = true;
       this.startCell = cell;
-      this.highlightCell(cell.row, cell.col, 0xffff00);
+      this.highlightCell(cell.row, cell.col, this.TEMP_HIGHLIGHT_COLOR);
       this.currentHighlight.push({ row: cell.row, col: cell.col });
     }
   }
@@ -321,10 +326,9 @@ export class GameScene extends Phaser.Scene {
   private onPointerMove(pointer: Phaser.Input.Pointer) {
     if (!this.isSelecting || this.gameFinished) return;
 
-    // En modo letras no permitimos arrastre (solo clic en una celda)
+    // En modo letras no hay arrastre
     if (this.isLetterMode) return;
 
-    // Modo palabras: lógica de resaltado de línea
     const currentCell = this.getCellFromPointer(pointer);
     if (!currentCell) return;
 
@@ -338,7 +342,7 @@ export class GameScene extends Phaser.Scene {
 
     if ((dx !== 0 && dy !== 0 && Math.abs(end.col - start.col) !== Math.abs(end.row - start.row)) ||
         (dx === 0 && dy === 0)) {
-      this.highlightCell(start.row, start.col, 0xffff00);
+      this.highlightCell(start.row, start.col, this.TEMP_HIGHLIGHT_COLOR);
       this.currentHighlight.push({ row: start.row, col: start.col });
       return;
     }
@@ -348,7 +352,7 @@ export class GameScene extends Phaser.Scene {
       const row = start.row + i * dy;
       const col = start.col + i * dx;
       if (row >= 0 && row < this.gridSize && col >= 0 && col < this.gridSize) {
-        this.highlightCell(row, col, 0xffff00);
+        this.highlightCell(row, col, this.TEMP_HIGHLIGHT_COLOR);
         this.currentHighlight.push({ row, col });
       }
     }
@@ -359,7 +363,6 @@ export class GameScene extends Phaser.Scene {
     this.isSelecting = false;
 
     if (this.isLetterMode) {
-      // Modo letras: verificar la celda donde se hizo clic
       if (!this.startCell) return;
 
       const { row, col } = this.startCell;
@@ -367,29 +370,30 @@ export class GameScene extends Phaser.Scene {
       const index = this.targetLetters.indexOf(letter);
 
       if (index !== -1 && !this.foundLetters[index]) {
-        // Letra correcta y no encontrada aún
+        // Letra correcta
         this.foundLetters[index] = true;
         this.permanentHighlights.push({ row, col });
-        this.highlightCell(row, col, 0x00ff00); // verde permanente
-
-        // Marcar en la lista
+        this.highlightCell(row, col, this.PERMANENT_HIGHLIGHT_COLOR);
         this.letterTexts[index].setStyle({ color: '#00ff00', textDecoration: 'line-through' });
 
-        // Comprobar victoria
         if (this.foundLetters.every(found => found)) {
           this.gameFinished = true;
           this.showVictoryMessage();
         }
       } else {
-        // Letra incorrecta o ya encontrada: quitar resaltado temporal
-        this.clearTemporaryHighlight();
+        // Letra incorrecta o ya encontrada: marcar como incorrecta (solo si no es permanente)
+        if (!this.permanentHighlights.some(p => p.row === row && p.col === col)) {
+          this.incorrectCells[row][col] = true;
+          this.highlightCell(row, col, this.INCORRECT_LETTER_COLOR);
+        }
       }
 
-      // Limpiar selección
+      // Limpiar resaltado temporal
+      this.clearTemporaryHighlight();
       this.currentHighlight = [];
       this.startCell = null;
     } else {
-      // Modo palabras: lógica original (formar palabra)
+      // Modo palabras
       if (this.currentHighlight.length < 2) {
         this.clearTemporaryHighlight();
         this.startCell = null;
@@ -411,7 +415,7 @@ export class GameScene extends Phaser.Scene {
         this.foundWords[foundIndex] = true;
         this.permanentHighlights.push(...this.currentHighlight.map(cell => ({ ...cell })));
         this.currentHighlight.forEach(cell => {
-          this.highlightCell(cell.row, cell.col, 0x00ff00);
+          this.highlightCell(cell.row, cell.col, this.PERMANENT_HIGHLIGHT_COLOR);
         });
         this.wordTexts[foundIndex].setStyle({ color: '#00ff00', textDecoration: 'line-through' });
 
@@ -435,8 +439,9 @@ export class GameScene extends Phaser.Scene {
   private clearTemporaryHighlight() {
     this.currentHighlight.forEach(cell => {
       const isPermanent = this.permanentHighlights.some(p => p.row === cell.row && p.col === cell.col);
-      if (!isPermanent) {
-        this.cells[cell.row][cell.col].bg.setFillStyle(0x333333);
+      const isIncorrect = this.isLetterMode && this.incorrectCells[cell.row][cell.col];
+      if (!isPermanent && !isIncorrect) {
+        this.cells[cell.row][cell.col].bg.setFillStyle(this.BASE_CELL_COLOR);
       }
     });
     this.currentHighlight = [];
