@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import success from '../assets/success.mp3';
+import victory from '../assets/victory.mp3';
 
 // Pools de palabras (solo para dificultad 'medium')
 const MEDIUM_WORDS_POOL = [
@@ -14,6 +16,10 @@ export class GameScene extends Phaser.Scene {
   private readonly INCORRECT_LETTER_COLOR = 0x666666; // gris oscuro para letras incorrectas
   private readonly TEMP_HIGHLIGHT_COLOR = 0xffff00;   // amarillo
   private readonly PERMANENT_HIGHLIGHT_COLOR = 0x00ff00; // verde
+
+  // Sonidos
+  private successSound!: Phaser.Sound.BaseSound;
+  private victorySound!: Phaser.Sound.BaseSound;
 
   // Propiedades comunes
   private gridSize!: number;
@@ -48,6 +54,12 @@ export class GameScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'GameScene' });
+  }
+
+  preload() {
+    // Carga los efectos de sonido (ajusta la ruta según tu estructura)
+    this.load.audio('success', success);
+    this.load.audio('victory', victory);
   }
 
   init(data: { size: number; difficulty: string }) {
@@ -96,6 +108,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    // Crea los objetos de sonido (ya cargados)
+    this.successSound = this.sound.add('success');
+    this.victorySound = this.sound.add('victory');
+
     // Fondo azul claro
     this.cameras.main.setBackgroundColor('#578abd');
 
@@ -375,6 +391,9 @@ export class GameScene extends Phaser.Scene {
         this.permanentHighlights.push({ row, col });
         this.highlightCell(row, col, this.PERMANENT_HIGHLIGHT_COLOR);
         this.letterTexts[index].setStyle({ color: '#00ff00', textDecoration: 'line-through' });
+        
+        // Reproducir sonido de acierto
+        this.successSound.play();
 
         if (this.foundLetters.every(found => found)) {
           this.gameFinished = true;
@@ -419,6 +438,8 @@ export class GameScene extends Phaser.Scene {
         });
         this.wordTexts[foundIndex].setStyle({ color: '#00ff00', textDecoration: 'line-through' });
 
+        this.successSound.play();
+
         if (this.foundWords.every(found => found)) {
           this.gameFinished = true;
           this.showVictoryMessage();
@@ -449,6 +470,9 @@ export class GameScene extends Phaser.Scene {
 
   private showVictoryMessage() {
     this.elapsedTime = Math.floor((Date.now() - this.startTime) / 1000);
+
+    // Reproducir sonido de victoria
+    this.victorySound.play();
 
     const overlay = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7)
       .setDepth(10)

@@ -1,4 +1,3 @@
-// menu-scene.ts
 import Phaser from 'phaser';
 
 export class MenuScene extends Phaser.Scene {
@@ -7,7 +6,7 @@ export class MenuScene extends Phaser.Scene {
   }
 
   create() {
-    // Fondo de la escena
+    // Fondo
     this.cameras.main.setBackgroundColor('#578abd');
 
     // Título
@@ -17,26 +16,41 @@ export class MenuScene extends Phaser.Scene {
       fontStyle: 'bold',
     }).setOrigin(0.5);
 
-    // Botón Fácil (5x5, letras)
-    const easyButton = this.add.rectangle(400, 300, 200, 60, 0xe2e0e0)
-      .setInteractive()
-      .on('pointerdown', () => {
-        this.scene.start('GameScene', { size: 5, difficulty: 'easy' });
-      });
+    // Botón "Letras" (fácil)
+    this.createRoundedButton(400, 300, 'Letras', () => {
+      this.scene.start('GameScene', { size: 5, difficulty: 'easy' });
+    });
 
-    this.add.text(400, 300, 'Letras', {
-      fontSize: '32px',
-      color: '#000000',
-    }).setOrigin(0.5);
+    // Botón "Palabras" (medio)
+    this.createRoundedButton(400, 400, 'Palabras', () => {
+      this.scene.start('GameScene', { size: 5, difficulty: 'medium' });
+    });
+  }
 
-    // Botón Medio (5x5, palabras)
-    const mediumButton = this.add.rectangle(400, 400, 200, 60, 0xe2e0e0)
-      .setInteractive()
-      .on('pointerdown', () => {
-        this.scene.start('GameScene', { size: 5, difficulty: 'medium' });
-      });
+  /**
+   * Crea un botón con fondo redondeado y texto centrado.
+   * @param x Centro X
+   * @param y Centro Y
+   * @param text Texto del botón
+   * @param callback Función al hacer clic
+   */
+  private createRoundedButton(x: number, y: number, text: string, callback: () => void) {
+    const width = 200;
+    const height = 60;
+    const radius = 15; // Radio de las esquinas
 
-    this.add.text(400, 400, 'Palabras', {
+    // Dibujar rectángulo redondeado
+    const graphics = this.add.graphics();
+    graphics.fillStyle(0xe2e0e0, 1);
+    // fillRoundedRect(x, y, width, height, radius) recibe la esquina superior izquierda
+    graphics.fillRoundedRect(x - width / 2, y - height / 2, width, height, radius);
+
+    // Zona interactiva (detecta clics en el área rectangular)
+    const zone = this.add.zone(x, y, width, height).setInteractive();
+    zone.on('pointerdown', callback);
+
+    // Texto del botón
+    this.add.text(x, y, text, {
       fontSize: '32px',
       color: '#000000',
     }).setOrigin(0.5);
