@@ -14,8 +14,18 @@
     font-style: italic;
     font-size: 1.4rem;
     position: absolute;
-    left: 1%;            /* Alinea a la izquierda, puedes cambiarlo según necesites */
-    top: 30%;           /* Coloca la parte superior del texto en el 50% de la altura del footer */
-    transform: translateY(-50%); /* Desplaza el texto hacia arriba la mitad de su propia altura */
-    text-align: left;   /* Mantiene el texto alineado a la izquierda */
+    left: 1%;            /* Alinea a la izquierda en escritorio */
+    top: 30%;           
+    transform: translateY(-50%); 
+    text-align: left;   
+}
+
+@media (max-width: 768px) {
+    .footer-text {
+        font-size: 1rem;      /* Texto un poco más pequeño */
+        left: 50%;               /* Centrado horizontal */
+        transform: translate(-50%, -50%); /* Ajuste fino para centrar completamente */
+        text-align: center;      /* Asegura que el texto quede centrado */
+        width: 100%;             /* Opcional: evita desbordes en pantallas muy pequeñas */
+    }
 }

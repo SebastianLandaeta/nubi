@@ -1,105 +1,114 @@
 .home {
     min-height: 100vh;
     display: flex;
-    flex-direction: column; /* Todos los elementos se ordenan verticalmente */
-    align-items: center; /* Centra horizontalmente */
-    font-family: 'Nunito', sans-serif; /* Fuente que usará todo el home */
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Nunito', sans-serif;
 }
 
-/* Contenedor del hero */
+/* --- HERO --- */
 .hero-container {
-    width: 100%;
-}
-
-/* imagen hero siempre debajo del navbar */
-.hero-image {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-}
-
-/* Texto encima del hero */
-.hero-overlay-text {
-    position: absolute;
-    top: 28%;
-    left: 18%;
-    text-align: left;
-    width: auto;
-    max-width: 35vw;
-}
-
-h1, h2 {
-    margin: 0;
-}
-
-h1 {
-    color: #44413A;
-}
-
-h2 {
-    color: #636362;
-}
-
-.hero-overlay-text h1 {
-    font-size: 3rem;
-    font-weight: 800; /* Aumenta el grosor del texto*/
-    line-height: 1.1; /* Espacio entre lineas */
-}
-
-.hero-overlay-text h2 {
-    line-height: 1.1; /* Espacio entre lineas */
-}
-
-/* Texto debajo del hero */
-.info-container h1 {
-    text-align: center;
-    font-size: 2.7rem;
-}
-
-.info-container h2 {
-    font-size: 1.7rem;
-}
-
-/* Contenedor del footer */
-.footer-container {
     position: relative;
     width: 100%;
 }
 
-/* Nubes de fondo del footer */
-.nubes-abajo-image {
+.hero-image {
     width: 100%;
+    height: auto;
     object-fit: contain;
+    display: block;
 }
 
-/* Botones encima del footer */
+/* --- TEXTO INFORMATIVO --- */
+.info-container {
+    width: 100%;    
+    box-sizing: border-box;
+}
+
+.info-container h1 {
+    text-align: center;
+    font-size: clamp(2rem, 5vw, 2.7rem);
+    color: #44413A;
+    margin: 1rem;
+}
+
+.info-container h2 {
+    text-align: center;
+    font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+    color: #636362;
+    margin: 0;
+}
+
+/* --- CONTENEDOR PRINCIPAL (NUBES + BOTONES) --- */
+.footer-container {
+    display: grid;
+    grid-template-areas: "nubes";
+    width: 100%;
+    position: relative;
+}
+
+/* Imagen de nubes */
+.nubes-abajo-image {
+    grid-area: nubes;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    align-self: end;     /* fuerza la imagen al fondo */
+}
+
+/* Botones superpuestos (en la misma celda que la imagen) */
 .footer-buttons {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    grid-area: nubes;                     /* Misma celda que la imagen */
     display: flex;
+    flex-wrap: wrap;
     gap: 2rem;
     justify-content: center;
-    width: auto;
-    max-width: 100%;
-}
-
-/* Cada botón */
-.home-button {
+    align-items: center;
+    align-self: center;                   /* Centrado vertical dentro de la celda */
+    justify-self: center;                  /* Centrado horizontal */
     width: 100%;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    pointer-events: none;                  /* El contenedor no intercepta clicks */
+    z-index: 2;                             /* Garantiza que estén encima de la imagen */
 }
 
-/* Efecto en los botones*/
+.footer-buttons a {
+    pointer-events: auto;                   /* Los enlaces siguen siendo clickeables */
+    display: inline-block;
+}
+
+/* Estilo de cada botón */
+.home-button {
+    width: auto;
+    max-width: 180px;                       /* Tamaño máximo en escritorio */
+    height: auto;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
 .home-button:hover {
     opacity: 0.7;
 }
 
-/* evitar que imágenes se desborden */
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
+/* --- MEDIA QUERIES (solo ajustes de tamaño y espaciado) --- */
+@media (max-width: 768px) {
+    .footer-buttons {
+        gap: 1rem;
+    }
+
+    .home-button {
+        max-width: 130px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-buttons {
+        gap: 0.8rem;
+    }
+
+    .home-button {
+        max-width: 100px;
+    }
 }

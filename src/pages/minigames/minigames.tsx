@@ -10,7 +10,7 @@ export default function MiniGames() {
     return (
         <div className="minijuegos">
             <Navbar />
-            <img src={nubesArriba} alt="Nubes arriba" draggable={false} />
+            <img src={nubesArriba} alt="Nubes arriba" draggable={false} className="nubes-arriba" />
             
             <h1>Minijuegos</h1>
             <Link to="/minijuegos/sopa-de-letras" aria-label="Sopa de Letras">
@@ -19,7 +19,7 @@ export default function MiniGames() {
                 </button>
             </Link>
 
-            <img src={nubesAbajo} alt="Nubes abajo" draggable={false} />
+            <img src={nubesAbajo} alt="Nubes abajo" draggable={false} className="nubes-abajo" />
 
             <Footer />
         </div>

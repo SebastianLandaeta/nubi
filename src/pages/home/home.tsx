@@ -2,6 +2,7 @@ import NavBar from '../../shared/components/navbar';
 import Footer from '../../shared/components/footer';
 import { Link } from 'react-router-dom';
 import hero from './assets/hero.png';
+import heroResponsive from './assets/hero-responsive.png';
 import nubesAbajo from './assets/nubes-abajo.png';
 import chatBtn from './assets/chat-btn.png';
 import juegosBtn from './assets/juegos-btn.png';
@@ -14,12 +15,10 @@ export default function Home() {
       <NavBar />
 
       <div className="hero-container">
-        <img src={hero} alt="Hero" className="hero-image" draggable={false} />
-
-        <div className="hero-overlay-text">
-          <h1>La Inteligencia Artificial Educativa</h1>
-          <h2>Diviértete con NUBI, tu robot amigo para aprender.</h2>
-        </div>
+        <picture>
+          <source media="(max-width: 768px)" srcSet={heroResponsive} />
+          <img src={hero} alt="Hero" className="hero-image" draggable={false} />
+        </picture>
       </div>
 
       <div className="info-container">
@@ -28,9 +27,7 @@ export default function Home() {
       </div>
       
       <div className="footer-container">
-        <img src={nubesAbajo} alt="Nubes-abajo" className="nubes-abajo-image" draggable={false} />
-
-        {/* BOTONES SOBRE EL FOOTER */}
+      
         <div className="footer-buttons">
           <Link to="/chat" aria-label="Chat IA">
             <img src={chatBtn} className="home-button" alt="Chat IA" />
@@ -42,7 +39,10 @@ export default function Home() {
             <img src={acercaBtn} className="home-button" alt="Acerca de Nubi" />
           </Link>
         </div>
+
+        <img src={nubesAbajo} alt="Nubes-abajo" className="nubes-abajo-image" draggable={false} />
       </div>
+
       <Footer />
     </div>
   );
