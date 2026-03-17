@@ -42,14 +42,14 @@
 /* --- CONTENEDOR PRINCIPAL (NUBES + BOTONES) --- */
 .footer-container {
     display: grid;
-    grid-template-areas: "nubes";
+    grid-template-areas: "clouds";
     width: 100%;
     position: relative;
 }
 
 /* Imagen de nubes */
-.nubes-abajo-image {
-    grid-area: nubes;
+.clouds-bottom-image {
+    grid-area: clouds;
     width: 100%;
     height: auto;
     object-fit: contain;
@@ -59,7 +59,7 @@
 
 /* Botones superpuestos (en la misma celda que la imagen) */
 .footer-buttons {
-    grid-area: nubes;                     /* Misma celda que la imagen */
+    grid-area: clouds;                     /* Misma celda que la imagen */
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;

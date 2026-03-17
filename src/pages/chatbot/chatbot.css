@@ -1,28 +1,43 @@
+/* Reset clave para evitar overflow */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Contenedor principal */
 .chat {
-  font-family: 'Nunito', sans-serif; /* Fuente que usará todo el chatbot */
+  font-family: 'Nunito', sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   position: relative;
 }
 
+/* Caja del chat */
 .chat-container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+
+  padding: 15px;
   overflow-y: auto;
 
   border: 4px dashed #A4D0EA;
   border-radius: 25px;
   background: #ffffff;
 
-  margin: 20px auto;
+  /* 👇 CLAVE: evita desbordes */
+  width: calc(100% - 20px);
   max-width: 900px;
+  margin: 10px auto;
 
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* Lista de mensajes */
 .messages {
   flex: 1;
   display: flex;
@@ -31,18 +46,20 @@
   margin-bottom: 20px;
 }
 
+/* Mensajes */
 .message {
   display: flex;
 }
 
-.message.user { /* Mensaje del usuario */
+.message.user {
   justify-content: flex-end;
 }
 
-.message.model { /* Mensaje del robot */
+.message.model {
   justify-content: flex-start;
 }
 
+/* Burbuja */
 .bubble {
   max-width: 70%;
   padding: 10px 15px;
@@ -51,44 +68,55 @@
   word-wrap: break-word;
 }
 
+/* Usuario */
 .message.user .bubble {
   background: #007bff;
   color: white;
 }
 
-.typing { /* Nubi está pensando... */
+/* Texto de "pensando" */
+.typing {
   font-style: italic;
   color: #666;
 }
 
+/* Error */
 .error {
   color: red;
   text-align: center;
   margin: 10px 0;
 }
 
+/* Área de input */
 .input-area {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   padding: 10px;
   background: white;
   border-top: 1px solid #ccc;
+
+  flex-wrap: wrap; /* 👈 evita overflow */
 }
 
+/* Input */
 .input-area input {
   flex: 1;
+  min-width: 0; /* 👈 evita que empuje el layout */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
+/* Botones */
 .input-area button {
-  padding: 10px 20px;
+  padding: 10px;
   background: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+
+  flex-shrink: 0; /* 👈 no se deforman */
 }
 
 .input-area button:disabled {
@@ -96,6 +124,7 @@
   cursor: not-allowed;
 }
 
+/* Botón de voz */
 .speak-btn {
   margin-left: 10px;
   background: transparent;
@@ -108,8 +137,9 @@
   transform: scale(1.2);
 }
 
+/* Micrófono */
 .mic-btn {
-  padding: 10px 20px;
+  padding: 10px;
   background: #28a745;
   color: white;
   border: none;
@@ -125,4 +155,32 @@
 .mic-btn:disabled {
   background: #ccc;
   cursor: not-allowed;
+}
+
+/* ========================= */
+/*   RESPONSIVE (MÓVIL) */
+/* ========================= */
+@media (max-width: 600px) {
+
+  .chat-container {
+    padding: 10px;
+    border-radius: 15px;
+  }
+
+  .bubble {
+    max-width: 90%;
+    font-size: 14px;
+  }
+
+  .input-area {
+    flex-direction: column;
+  }
+
+  .input-area input {
+    width: 100%;
+  }
+
+  .input-area button {
+    width: 100%;
+  }
 }

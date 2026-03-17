@@ -3,10 +3,10 @@ import Footer from '../../shared/components/footer';
 import { Link } from 'react-router-dom';
 import hero from './assets/hero.png';
 import heroResponsive from './assets/hero-responsive.png';
-import nubesAbajo from './assets/nubes-abajo.png';
+import cloudsBottom from './assets/clouds-bottom.png';
 import chatBtn from './assets/chat-btn.png';
-import juegosBtn from './assets/juegos-btn.png';
-import acercaBtn from './assets/acerca-btn.png';
+import minigamesBtn from './assets/minigames-btn.png';
+import aboutBtn from './assets/about-btn.png';
 import './home.css';
 
 export default function Home() {
@@ -33,14 +33,14 @@ export default function Home() {
             <img src={chatBtn} className="home-button" alt="Chat IA" />
           </Link>
           <Link to="/minijuegos" aria-label="Minijuegos">
-            <img src={juegosBtn} className="home-button" alt="Minijuegos" />
+            <img src={minigamesBtn} className="home-button" alt="Minijuegos" />
           </Link>
           <Link to="/acerca" aria-label="Acerca de Nubi">
-            <img src={acercaBtn} className="home-button" alt="Acerca de Nubi" />
+            <img src={aboutBtn} className="home-button" alt="Acerca de Nubi" />
           </Link>
         </div>
 
-        <img src={nubesAbajo} alt="Nubes-abajo" className="nubes-abajo-image" draggable={false} />
+        <img src={cloudsBottom} alt="Nubes-abajo" className="clouds-bottom-image" draggable={false} />
       </div>
 
       <Footer />
