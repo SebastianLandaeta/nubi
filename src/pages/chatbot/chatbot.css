@@ -157,9 +157,7 @@ body {
   cursor: not-allowed;
 }
 
-/* ========================= */
 /*   RESPONSIVE (MÓVIL) */
-/* ========================= */
 @media (max-width: 600px) {
 
   .chat-container {

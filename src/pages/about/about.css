@@ -28,8 +28,8 @@
     gap: 20px;
     align-items: start;
     width: 100%;
-    container-type: inline-size;              /* Habilita unidades cqw */
-    font-size: clamp(1.1rem, 5cqw, 1.9rem);     /* Tamaño base aumentado */
+    container-type: inline-size;
+    font-size: clamp(1.1rem, 5cqw, 1.9rem);
 }
 
 .que .que-text {
@@ -39,12 +39,12 @@
 }
 
 .que h2 {
-    font-size: 1.5em;                         /* 50% más grande que el base */
+    font-size: 1.5em;
     margin: 0 0 0.5em 0;
 }
 
 .que p {
-    font-size: 1em;                            /* Igual al tamaño base */
+    font-size: 1em;
     line-height: 1.5;
     margin: 0;
 }
@@ -70,7 +70,7 @@
     display: flex;
     flex-direction: column;
     container-type: inline-size;
-    font-size: clamp(1.1rem, 5cqw, 1.9rem);     /* Mismo tamaño base */
+    font-size: clamp(1.1rem, 5cqw, 1.9rem);
 }
 
 .quien h2,
@@ -81,12 +81,12 @@
 
 .quien p,
 .objetivo p {
-    font-size: 1em;                            /* Hereda el tamaño base */
+    font-size: 1em;
     line-height: 1.5;
     margin: 0 0 1em 0;
 }
 
-/* Imagen del creador en la sección "quien" */
+/* Imagen del creador */
 .quien .creador {
     margin-top: auto;
     align-self: flex-end;
@@ -95,7 +95,7 @@
     height: auto;
 }
 
-/* Imagen inferior en la sección "objetivo" */
+/* Imagen inferior */
 .objetivo .personaje-bottom {
     margin-top: auto;
     align-self: flex-end;
@@ -104,11 +104,31 @@
     height: auto;
 }
 
-/* Ajuste responsivo para móviles (tamaño base más pequeño) */
+/* ----- RESPONSIVE ----- */
+@media (max-width: 768px) {
+
+    /* Apilar las secciones inferiores */
+    .about .row {
+        flex-direction: column;
+    }
+
+    /* Convertir la sección "¿Qué es NUBI?" a una sola columna */
+    .que {
+        grid-template-columns: 1fr;
+    }
+
+    /* Centrar imagen superior */
+    .que .personaje-top {
+        justify-self: center;
+        width: 60%;
+    }
+}
+
+/* Ajuste extra para móviles pequeños */
 @media (max-width: 600px) {
     .que,
     .quien,
     .objetivo {
-        font-size: clamp(1rem, 6cqw, 1.6rem); /* Aumentado respecto al original */
+        font-size: clamp(1rem, 6cqw, 1.6rem);
     }
 }
