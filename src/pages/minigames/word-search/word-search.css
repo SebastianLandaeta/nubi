@@ -1,24 +1,35 @@
 .word-search {
-    /* opcional: para que el área ocupe toda la pantalla */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* el div que contiene el canvas de Phaser */
-.juego {
-    /* tamaño igual al de la configuración de Phaser */
-    width: 800px;
-    height: 600px;
+/* Contenedor que centra el juego */
+.juego-container {
+    flex: 1;
 
-    /* centra horizontalmente */
-    margin: 0 auto;
-
-    /* centra el contenido (el canvas) dentro del propio div */
     display: flex;
     justify-content: center;
     align-items: center;
 
-    /* si quieres que también se centre verticalmente entre navbar y footer */
-    flex: 1;          /* si .word-search es flex-col y min-height:100vh */
+    padding: 10px; /* evita que toque bordes en móvil */
+}
+
+/* Donde se monta Phaser */
+.juego {
+    width: 100%;
+    max-width: 800px;
+
+    /* Mantiene proporción 800x600 */
+    aspect-ratio: 4 / 3;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* El canvas se adapta automáticamente */
+.juego canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
