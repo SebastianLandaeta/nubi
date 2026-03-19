@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import success from '../assets/success.mp3';
-import victory from '../assets/victory.mp3';
+import success from '../../../../shared/assets/success.mp3';
+import victory from '../../../../shared/assets/victory.mp3';
 
 // Pools de palabras (solo para dificultad 'medium')
 const MEDIUM_WORDS_POOL = [

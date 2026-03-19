@@ -4,7 +4,8 @@ import Navbar from "../../shared/components/navbar";
 import Footer from "../../shared/components/footer";
 import nubesAbajo from "./assets/nubes-abajo.png";
 import nubesArriba from "./assets/nubes-arriba.png";
-import sdlLogo from "./assets/sopa-de-letras-logo.png"; // Ruta corregida
+import sdlLogo from "./assets/sopa-de-letras-logo.png";
+import sbcLogo from "./assets/sort-by-color-logo.png"; 
 
 export default function MiniGames() {
     return (
@@ -16,6 +17,12 @@ export default function MiniGames() {
             <Link to="/minijuegos/sopa-de-letras" aria-label="Sopa de Letras">
                 <button className="minigame-button">
                     <img src={sdlLogo} alt="Sopa de Letras" />
+                </button>
+            </Link>
+
+            <Link to="/minijuegos/ordenar-por-color" aria-label="Ordenar por Color">
+                <button className="minigame-button">
+                   <img src={sbcLogo} alt="Ordenar por Color" />
                 </button>
             </Link>
 
