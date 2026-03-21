@@ -138,7 +138,7 @@
   z-index: 25;
 }
 
-/* Media query para móvil (max-width: 768px) */
+/* Media query para móvil */
 @media (max-width: 809px) {
   /* Ocultar los links de escritorio */
   .navbar-links.desktop-links {
@@ -151,7 +151,7 @@
   }
 }
 
-/* En pantallas mayores a 768px, aseguramos que el drawer y overlay no estén visibles */
+/* En pantallas mayores a 810px, aseguramos que el drawer y overlay no estén visibles */
 @media (min-width: 810px) {
   .navbar-drawer,
   .drawer-overlay {

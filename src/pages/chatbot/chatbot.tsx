@@ -1,11 +1,17 @@
-import { useState, useEffect } from "react";
+// Componentes reutilizables
 import NavBar from "../../shared/components/navbar";
 import Footer from "../../shared/components/footer";
 import { GoogleGenAI } from "@google/genai";
-import nubesArriba from "./assets/nubes-arriba.png";
-import nubesAbajo from "./assets/nubes-abajo.png";
+import { useState, useEffect } from "react";
+
+// Imágenes
+import cloudsTop from "./assets/clouds-top.png";
+import cloudsBottom from "./assets/clouds-bottom.png";
+
+// Estilos
 import "./chatbot.css";
 
+// Interfaz para los mensajes del chat
 interface Message {
   role: "user" | "model";
   content: string;
@@ -239,11 +245,12 @@ export default function Chatbot() {
     }
   };
 
+  // Renderizado del componente
   return (
     <div className="chat">
       <NavBar />
 
-      <img src={nubesArriba} alt="Nubes arriba" draggable={false} />
+      <img src={cloudsTop} alt="Nubes arriba" draggable={false} />
 
       <div className="chat-container">
         <div className="messages">
@@ -299,7 +306,7 @@ export default function Chatbot() {
         </div>
       </div>
 
-      <img src={nubesAbajo} alt="Nubes abajo" draggable={false} />
+      <img src={cloudsBottom} alt="Nubes abajo" draggable={false} />
 
       <Footer />
     </div>

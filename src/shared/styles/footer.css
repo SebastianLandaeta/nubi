@@ -2,7 +2,7 @@
     position: relative; /* Establece el contexto para el posicionamiento absoluto del texto */
 }
 
-.linea {
+.line {
     display: block;     /* Para evitar espacios no deseados debajo de la imagen */
     width: 100%;        /* Ajusta según el ancho deseado */
     height: auto;       /* Mantiene la proporción */

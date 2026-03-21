@@ -1,34 +1,79 @@
-import "./minigames.css";
-import { Link } from "react-router-dom";
+// Componentes
 import Navbar from "../../shared/components/navbar";
 import Footer from "../../shared/components/footer";
-import nubesAbajo from "./assets/nubes-abajo.png";
-import nubesArriba from "./assets/nubes-arriba.png";
-import sdlLogo from "./assets/sopa-de-letras-logo.png";
-import sbcLogo from "./assets/sort-by-color-logo.png"; 
+import { Link } from "react-router-dom";
+import { useState } from "react";
+
+// Imágenes
+import cloudsBottom from "./assets/clouds-bottom.png";
+import cloudsTop from "./assets/clouds-top.png";
+import wsLogo from "./assets/word-search-logo.png";
+import sbcLogo from "./assets/sort-by-color-logo.png";
+
+// Estilos
+import "./minigames.css";
 
 export default function MiniGames() {
-    return (
-        <div className="minijuegos">
-            <Navbar />
-            <img src={nubesArriba} alt="Nubes arriba" draggable={false} className="nubes-arriba" />
-            
-            <h1>Minijuegos</h1>
-            <Link to="/minijuegos/sopa-de-letras" aria-label="Sopa de Letras">
-                <button className="minigame-button">
-                    <img src={sdlLogo} alt="Sopa de Letras" />
-                </button>
-            </Link>
+  const [index, setIndex] = useState(0);
 
-            <Link to="/minijuegos/ordenar-por-color" aria-label="Ordenar por Color">
-                <button className="minigame-button">
-                   <img src={sbcLogo} alt="Ordenar por Color" />
-                </button>
-            </Link>
+  const totalGames = 2;
 
-            <img src={nubesAbajo} alt="Nubes abajo" draggable={false} className="nubes-abajo" />
+  const next = () => {
+    setIndex((prev) => (prev < totalGames - 1 ? prev + 1 : prev));
+  };
 
-            <Footer />
+  const prev = () => {
+    setIndex((prev) => (prev > 0 ? prev - 1 : prev));
+  };
+
+  return (
+    <div className="minijuegos">
+      <Navbar />
+
+      <img
+        src={cloudsTop}
+        alt="Nubes arriba"
+        draggable={false}
+        className="clouds-top"
+      />
+
+      <h1>Minijuegos</h1>
+
+      <div className="minigames-container">
+        <button className="arrow left" onClick={prev}>
+          ‹
+        </button>
+
+        <div
+          className="minigames-track"
+          style={{ transform: `translateX(-${index * 100}%)` }}
+        >
+          <Link to="/minijuegos/sopa-de-letras">
+            <button className="minigame-button">
+              <img src={wsLogo} alt="Sopa de Letras" />
+            </button>
+          </Link>
+
+          <Link to="/minijuegos/ordenar-por-color">
+            <button className="minigame-button">
+              <img src={sbcLogo} alt="Ordenar por Color" />
+            </button>
+          </Link>
         </div>
-    );
+
+        <button className="arrow right" onClick={next}>
+          ›
+        </button>
+      </div>
+
+      <img
+        src={cloudsBottom}
+        alt="Nubes abajo"
+        draggable={false}
+        className="clouds-bottom"
+      />
+
+      <Footer />
+    </div>
+  );
 }

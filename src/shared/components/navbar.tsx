@@ -1,7 +1,12 @@
+// Componentes
 import { useState } from "react";
-import "../styles/navbar.css";
-import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
+
+// Imagen
+import logo from "../../assets/logo.png";
+
+// Estilos
+import "../styles/navbar.css";
 
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);

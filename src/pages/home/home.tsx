@@ -1,12 +1,17 @@
+// Componentes reutilizables
 import NavBar from '../../shared/components/navbar';
 import Footer from '../../shared/components/footer';
 import { Link } from 'react-router-dom';
+
+// Imágenes
 import hero from './assets/hero.png';
 import heroResponsive from './assets/hero-responsive.png';
 import cloudsBottom from './assets/clouds-bottom.png';
 import chatBtn from './assets/chat-btn.png';
 import minigamesBtn from './assets/minigames-btn.png';
 import aboutBtn from './assets/about-btn.png';
+
+// Estilos
 import './home.css';
 
 export default function Home() {

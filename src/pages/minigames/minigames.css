@@ -1,32 +1,123 @@
 .minijuegos {
-    font-family: 'Nunito', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
-.nubes-arriba, .nubes-abajo {
-    width: 100%;
-    object-fit: contain;
-    display: block;
+/* Solo centramos lo necesario (NO el navbar) */
+.minijuegos h1,
+.minigames-container {
+  text-align: center;
 }
 
+.minijuegos h1 {
+  color: #44413A;
+}
+
+/* Nubes */
+.clouds-top,
+.clouds-bottom {
+  width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* CONTENEDOR */
+.minigames-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem auto;
+  max-width: 400px;
+}
+
+/* TRACK */
+.minigames-track {
+  display: flex;
+  transition: transform 0.3s ease;
+  width: 100%;
+}
+
+/* Cada slide */
+.minigames-track a {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* BOTÓN */
 .minigame-button {
-    background: transparent;
-    border: 2px solid #626263;
-    border-radius: 12px;
-    padding: 0;
-    width: 150px;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    overflow: hidden;
-    box-sizing: border-box;
-    margin: 0 auto 2rem auto; /* centra horizontalmente */
+  background: transparent;
+  border: 2px solid #626263;
+  border-radius: 12px;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  overflow: hidden;
+}
+
+.minigame-button:hover {
+  transform: scale(1.05);
 }
 
 .minigame-button img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* FLECHAS */
+.arrow {
+  display: none;
+}
+
+/* 📱 MOBILE */
+@media (max-width: 768px) {
+  .minigames-container {
+    overflow: hidden;
+  }
+
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    background: transparent;
+    border: none;
+    font-size: 3rem;
+    color: #9ca3af;
+    cursor: pointer;
+    z-index: 10;
+    padding: 0.75rem;
+  }
+
+  .arrow.left {
+    left: 5px;
+  }
+
+  .arrow.right {
+    right: 5px;
+  }
+}
+
+/* DESKTOP */
+@media (min-width: 769px) {
+  .minigames-container {
+    max-width: none;
+  }
+
+  .minigames-track {
+    gap: 2rem;
+    justify-content: center;
+  }
+
+  .minigames-track a {
+    flex: unset;
+  }
 }

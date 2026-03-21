@@ -5,9 +5,9 @@
 
 /* Estilo común para los elementos enmarcados */
 .about h1,
-.que,
-.quien,
-.objetivo {
+.what,
+.who,
+.objective {
     border: 5px dashed #A4D0EA;
     border-radius: 15px;
     padding: 20px;
@@ -15,14 +15,20 @@
     box-sizing: border-box;
 }
 
+/* TÍTULO PRINCIPAL */
 .about h1 {
     text-align: center;
     width: 100%;
     color: #44413A;
 }
 
+/* TODOS LOS H2 */
+.about h2 {
+    color: #44413A;
+}
+
 /* ----- SECCIÓN "¿QUÉ ES NUBI?" ----- */
-.que {
+.what {
     display: grid;
     grid-template-columns: 1fr 35%;
     gap: 20px;
@@ -32,24 +38,25 @@
     font-size: clamp(1.1rem, 5cqw, 1.9rem);
 }
 
-.que .que-text {
+.what .what-text {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.que h2 {
+.what h2 {
     font-size: 1.5em;
     margin: 0 0 0.5em 0;
 }
 
-.que p {
+.what p {
     font-size: 1em;
     line-height: 1.5;
     margin: 0;
+    color: #626263;
 }
 
-.que .personaje-top {
+.what .character-top {
     width: 100%;
     height: auto;
     align-self: center;
@@ -63,8 +70,8 @@
     margin: 20px 0;
 }
 
-.about .quien,
-.about .objetivo {
+.about .who,
+.about .objective {
     flex: 1;
     margin: 0;
     display: flex;
@@ -73,21 +80,22 @@
     font-size: clamp(1.1rem, 5cqw, 1.9rem);
 }
 
-.quien h2,
-.objetivo h2 {
+.who h2,
+.objective h2 {
     font-size: 1.5em;
     margin: 0 0 0.5em 0;
 }
 
-.quien p,
-.objetivo p {
+.who p,
+.objective p {
     font-size: 1em;
     line-height: 1.5;
     margin: 0 0 1em 0;
+    color: #626263;
 }
 
 /* Imagen del creador */
-.quien .creador {
+.who .developer {
     margin-top: auto;
     align-self: flex-end;
     width: 40%;
@@ -96,7 +104,7 @@
 }
 
 /* Imagen inferior */
-.objetivo .personaje-bottom {
+.objective .character-bottom {
     margin-top: auto;
     align-self: flex-end;
     width: 40%;
@@ -113,22 +121,22 @@
     }
 
     /* Convertir la sección "¿Qué es NUBI?" a una sola columna */
-    .que {
+    .what {
         grid-template-columns: 1fr;
     }
 
     /* Centrar imagen superior */
-    .que .personaje-top {
+    .what .personaje-top {
         justify-self: center;
         width: 60%;
     }
 }
 
-/* Ajuste extra para móviles pequeños */
+/* Ajuste extra para móviles pewhatños */
 @media (max-width: 600px) {
-    .que,
-    .quien,
-    .objetivo {
+    .what,
+    .who,
+    .objective {
         font-size: clamp(1rem, 6cqw, 1.6rem);
     }
 }
