@@ -37,7 +37,7 @@ export class GameScene extends Phaser.Scene {
     this.setupDrag();
   }
 
-  // 🎨 COLORES
+  // COLORES
   private getColorHex(color: ColorType): number {
     switch (color) {
       case 'red': return 0xff0000;
@@ -47,7 +47,7 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  // 📦 CAJAS
+  // CAJAS
   private createBoxes() {
     const colors: ColorType[] = ['red', 'blue', 'yellow', 'green'];
     this.boxes = [];
@@ -62,7 +62,7 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  // 🔺 FIGURAS
+  // FIGURAS
   private createShapes() {
     const colors: ColorType[] = ['red', 'blue', 'yellow', 'green'];
     const temp: { color: ColorType; shape: string }[] = [];
@@ -111,7 +111,7 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  // 🖱️ DRAG
+  // DRAG
   private setupDrag() {
     this.input.on('drag', (_: any, obj: any, x: number, y: number) => {
       obj.x = x;
@@ -123,7 +123,7 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  // ✅ VALIDACIÓN
+  // VALIDACIÓN
   private checkDrop(obj: any) {
     const color = obj.getData('color');
     let correct = false;
@@ -167,7 +167,7 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  // 🏆 VICTORIA
+  // VICTORIA
   private showVictory() {
     this.victorySound.play();
     

@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import success from '../../../../shared/assets/success.mp3';
 import victory from '../../../../shared/assets/victory.mp3';
 
-// Pools de palabras (solo para dificultad 'medium')
+// Pools de palabras (solo para dificultad 'palabras')
 const MEDIUM_WORDS_POOL = [
   'COCO', 'GATO', 'CASA', 'SOL', 'LUNA', 'MAR', 'CIELO', 'FLOR', 'CARA', 'NUBE',
   'AGUA', 'CEJA', 'TIA', 'LOBO', 'ROJO', 'AZUL', 'PATO', 'MONO', 'BEBE',
@@ -12,10 +12,10 @@ const MEDIUM_WORDS_POOL = [
 
 export class GameScene extends Phaser.Scene {
   // Constantes de color
-  private readonly BASE_CELL_COLOR = 0xffffff;        // blanco
-  private readonly INCORRECT_LETTER_COLOR = 0x666666; // gris oscuro para letras incorrectas
-  private readonly TEMP_HIGHLIGHT_COLOR = 0xffff00;   // amarillo
-  private readonly PERMANENT_HIGHLIGHT_COLOR = 0x00ff00; // verde
+  private readonly BASE_CELL_COLOR = 0xffffff;        // Blanco
+  private readonly INCORRECT_LETTER_COLOR = 0x666666; // Gris oscuro para letras incorrectas
+  private readonly TEMP_HIGHLIGHT_COLOR = 0xffff00;   // Amarillo
+  private readonly PERMANENT_HIGHLIGHT_COLOR = 0x00ff00; // Verde
 
   // Sonidos
   private successSound!: Phaser.Sound.BaseSound;

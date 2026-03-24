@@ -9,6 +9,7 @@ import cloudsBottom from "./assets/clouds-bottom.png";
 import cloudsTop from "./assets/clouds-top.png";
 import wsLogo from "./assets/word-search-logo.png";
 import sbcLogo from "./assets/sort-by-color-logo.png";
+import nmLogo from "./assets/number-match-logo.png";
 
 // Estilos
 import "./minigames.css";
@@ -16,7 +17,7 @@ import "./minigames.css";
 export default function MiniGames() {
   const [index, setIndex] = useState(0);
 
-  const totalGames = 2;
+  const totalGames = 3;
 
   const next = () => {
     setIndex((prev) => (prev < totalGames - 1 ? prev + 1 : prev));
@@ -57,6 +58,12 @@ export default function MiniGames() {
           <Link to="/minijuegos/ordenar-por-color">
             <button className="minigame-button">
               <img src={sbcLogo} alt="Ordenar por Color" />
+            </button>
+          </Link>
+
+          <Link to="/minijuegos/asociar-numeros">
+            <button className="minigame-button">
+              <img src={nmLogo} alt="Asociar Números" />
             </button>
           </Link>
         </div>
