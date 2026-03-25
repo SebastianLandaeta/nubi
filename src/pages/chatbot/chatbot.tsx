@@ -38,6 +38,41 @@ export default function Chatbot() {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   const ai = new GoogleGenAI({ apiKey });
 
+  const generateWithFallback = async (history: any[]) => {
+    try {
+      // Intento principal
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: history,
+      });
+
+      return response.text || "";
+    } catch (err: any) {
+      console.warn("Fallo con gemini-3-flash-preview:", err);
+
+      const msg = err?.message?.toLowerCase() || "";
+
+      // Solo fallback si es error de cuota/tokens
+      if (
+        msg.includes("quota") ||
+        msg.includes("token") ||
+        msg.includes("limit") ||
+        msg.includes("rate")
+      ) {
+        console.log("Usando fallback: gemini-2.5-flash");
+
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: history,
+        });
+
+        return response.text || "";
+      }
+
+      throw err; // otros errores no
+    }
+  };
+
   // Inicializar reconocimiento de voz
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -222,12 +257,7 @@ export default function Chatbot() {
         { role: "user", parts: [{ text: textToSend }] },
       ];
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview", // Modelo Gemini a utilizar
-        contents: history,
-      });
-
-      const assistantText = response.text || "";
+      const assistantText = await generateWithFallback(history);
 
       if (assistantText) {
         const assistantMessage: Message = {
