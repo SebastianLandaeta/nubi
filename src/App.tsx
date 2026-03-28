@@ -4,7 +4,7 @@ import Chatbot from "./pages/chatbot/chatbot";
 import MiniGames from "./pages/minigames/minigames";
 import WordSearch from "./pages/minigames/word-search/word-search";
 import SortByColor from "./pages/minigames/sort-by-color/sort-by-color";
-import NumberMatch from "./pages/minigames/number-match/number-match";
+import CountShapes from "./pages/minigames/count-shapes/count-shapes";
 import About from "./pages/about/about";
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
         <Route path="/minijuegos" element={<MiniGames />} />
         <Route path="/minijuegos/sopa-de-letras" element={<WordSearch />} />
         <Route path="/minijuegos/ordenar-por-color" element={<SortByColor />} />
-        <Route path="/minijuegos/asociar-numeros" element={<NumberMatch />} />
+        <Route path="/minijuegos/contar-figuras" element={<CountShapes />} />
         <Route path="/acerca" element={<About />} />
       </Routes>
     </div>

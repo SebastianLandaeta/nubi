@@ -9,7 +9,7 @@ import cloudsBottom from "./assets/clouds-bottom.png";
 import cloudsTop from "./assets/clouds-top.png";
 import wsLogo from "./assets/word-search-logo.png";
 import sbcLogo from "./assets/sort-by-color-logo.png";
-import nmLogo from "./assets/number-match-logo.png";
+import csLogo from "./assets/count-shapes-logo.png";
 
 // Estilos
 import "./minigames.css";
@@ -61,9 +61,9 @@ export default function MiniGames() {
             </button>
           </Link>
 
-          <Link to="/minijuegos/asociar-numeros">
+          <Link to="/minijuegos/contar-figuras">
             <button className="minigame-button">
-              <img src={nmLogo} alt="Asociar Números" />
+              <img src={csLogo} alt="Asociar Números" />
             </button>
           </Link>
         </div>

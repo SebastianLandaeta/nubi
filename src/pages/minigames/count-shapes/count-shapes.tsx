@@ -4,7 +4,7 @@ import { MenuScene } from './scenes/menu-scene';
 import { GameScene } from './scenes/game-scene';
 import Navbar from '../../../shared/components/navbar';
 import Footer from '../../../shared/components/footer';
-import './number-match.css';
+import './count-shapes.css';
 
 export default function NumberMatch() {
   const gameRef = useRef<HTMLDivElement>(null);
