@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import success from '../../../../shared/assets/success.mp3';
+import victory from '../../../../shared/assets/victory.mp3';
 
 export class GameScene extends Phaser.Scene {
 
@@ -17,6 +19,11 @@ export class GameScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'GameScene' });
+  }
+
+  preload() {
+    this.load.audio('success', success);
+    this.load.audio('victory', victory);
   }
 
   init(data: { rounds: number }) {
@@ -143,6 +150,7 @@ export class GameScene extends Phaser.Scene {
     this.options.forEach(o => o.disableInteractive());
 
     if (value === this.targetNumber) {
+      this.sound.play('success');
 
       this.score++;
       this.scoreText.setText('Puntos: ' + this.score);
@@ -176,6 +184,7 @@ export class GameScene extends Phaser.Scene {
 
   // Fin del juego
   private showGameOver() {
+    this.sound.play('victory');
 
     this.clearScene();
 
