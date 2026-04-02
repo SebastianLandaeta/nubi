@@ -17,6 +17,12 @@ export class GameScene extends Phaser.Scene {
   private currentRound = 1;
   private roundText!: Phaser.GameObjects.Text;
 
+  // ⏱️ TIMER
+  private startTime = 0;
+  private elapsedTime = 0;
+  private timerText!: Phaser.GameObjects.Text;
+  private gameFinished = false;
+
   constructor() {
     super({ key: 'GameScene' });
   }
@@ -36,8 +42,18 @@ export class GameScene extends Phaser.Scene {
     this.score = 0;
     this.currentRound = 1;
     this.previousNumber = null;
+    this.gameFinished = false;
 
-    this.scoreText = this.add.text(20, 20, 'Puntos: 0', {
+    // ⏱️ iniciar timer
+    this.startTime = this.time.now;
+    this.elapsedTime = 0;
+
+    this.timerText = this.add.text(20, 20, 'Tiempo: 0.0s', {
+      fontSize: '26px',
+      color: '#ffffff'
+    }).setOrigin(0, 0);
+
+    this.scoreText = this.add.text(20, 60, 'Puntos: 0', {
       fontSize: '26px',
       color: '#ffffff'
     });
@@ -48,6 +64,15 @@ export class GameScene extends Phaser.Scene {
     });
 
     this.startRound();
+  }
+
+  update() {
+    if (this.gameFinished) return;
+
+    const currentTime = this.time.now;
+    this.elapsedTime = (currentTime - this.startTime) / 1000;
+
+    this.timerText.setText(`Tiempo: ${this.elapsedTime.toFixed(1)}s`);
   }
 
   // 🔁 Nueva ronda
@@ -69,7 +94,7 @@ export class GameScene extends Phaser.Scene {
     this.roundText.setText(`Ronda: ${this.currentRound}/${this.totalRounds}`);
   }
 
-  // 🎲 Generar número (NO repetir el anterior)
+  // 🎲 Número
   private generateNumber(): number {
     let num;
 
@@ -182,18 +207,42 @@ export class GameScene extends Phaser.Scene {
     this.time.delayedCall(700, () => t.destroy());
   }
 
-  // Fin del juego
+  // 🏁 FIN DEL JUEGO
   private showGameOver() {
+    this.gameFinished = true; // 🛑 detener timer
+
     this.sound.play('victory');
+
+    const finalTime = this.elapsedTime.toFixed(1);
+
+    // 🥇 mejor tiempo por modo
+    const storageKey = `bestTime_${this.totalRounds}`;
+    const best = localStorage.getItem(storageKey);
+
+    if (!best || parseFloat(finalTime) < parseFloat(best)) {
+      localStorage.setItem(storageKey, finalTime);
+    }
+
+    const bestTime = localStorage.getItem(storageKey);
 
     this.clearScene();
 
     this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
 
-    this.add.text(400, 220, '¡VICTORIA!', {
+    this.add.text(400, 200, '¡VICTORIA!', {
       fontSize: '64px',
       color: '#ffff00',
       fontStyle: 'bold'
+    }).setOrigin(0.5);
+
+    this.add.text(400, 260, `Tiempo: ${finalTime}s`, {
+      fontSize: '32px',
+      color: '#ffffff'
+    }).setOrigin(0.5);
+
+    this.add.text(400, 300, `Mejor tiempo: ${bestTime}s`, {
+      fontSize: '26px',
+      color: '#00ffcc'
     }).setOrigin(0.5);
 
     const retry = this.add.rectangle(400, 400, 240, 70, 0x4caf50)

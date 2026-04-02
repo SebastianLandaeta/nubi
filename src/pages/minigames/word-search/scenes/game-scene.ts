@@ -190,8 +190,8 @@ export class GameScene extends Phaser.Scene {
 
   update() {
     if (!this.gameFinished && this.timerText) {
-      const seconds = Math.floor((Date.now() - this.startTime) / 1000);
-      this.timerText.setText(`Tiempo: ${seconds}s`);
+      const seconds = (Date.now() - this.startTime) / 1000;
+      this.timerText.setText(`Tiempo: ${seconds.toFixed(1)}s`);
     }
   }
 
@@ -469,16 +469,29 @@ export class GameScene extends Phaser.Scene {
   }
 
   private showVictoryMessage() {
-    this.elapsedTime = Math.floor((Date.now() - this.startTime) / 1000);
+    this.gameFinished = true;
 
-    // Reproducir sonido de victoria
+    const finalTime = ((Date.now() - this.startTime) / 1000).toFixed(1);
+
+    // 🔑 clave única por modo
+    const storageKey = `bestTime_sopa_${this.difficulty}_${this.gridSize}`;
+
+    const best = localStorage.getItem(storageKey);
+
+    if (!best || parseFloat(finalTime) < parseFloat(best)) {
+      localStorage.setItem(storageKey, finalTime);
+    }
+
+    const bestTime = localStorage.getItem(storageKey);
+
+    // sonido
     this.victorySound.play();
 
     const overlay = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7)
       .setDepth(10)
       .setInteractive();
 
-    this.add.text(400, 200, '¡VICTORIA!', {
+    this.add.text(400, 180, '¡VICTORIA!', {
       fontSize: '64px',
       color: '#ffff00',
       fontStyle: 'bold'
@@ -486,27 +499,35 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setDepth(11);
 
-    this.add.text(400, 300, `Tiempo: ${this.elapsedTime} segundos`, {
+    this.add.text(400, 260, `Tiempo: ${finalTime}s`, {
       fontSize: '32px',
       color: '#ffffff'
     })
       .setOrigin(0.5)
       .setDepth(11);
 
-    const button = this.add.rectangle(400, 400, 200, 60, 0x4caf50)
+    this.add.text(400, 310, `Mejor tiempo: ${bestTime}s`, {
+      fontSize: '26px',
+      color: '#00ffcc'
+    })
+      .setOrigin(0.5)
+      .setDepth(11);
+
+    const button = this.add.rectangle(400, 420, 220, 60, 0x4caf50)
       .setInteractive()
       .setDepth(11)
       .on('pointerdown', () => {
         this.scene.start('MenuScene');
       });
 
-    this.add.text(400, 400, 'Aceptar', {
-      fontSize: '32px',
+    this.add.text(400, 420, 'Aceptar', {
+      fontSize: '28px',
       color: '#ffffff'
     })
       .setOrigin(0.5)
       .setDepth(12);
   }
+
 
   private shuffleArray<T>(array: T[]): T[] {
     const newArray = [...array];

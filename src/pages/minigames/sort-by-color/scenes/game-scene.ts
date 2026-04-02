@@ -14,6 +14,12 @@ export class GameScene extends Phaser.Scene {
   private matchedCount = 0;
   private totalShapes = 20;
 
+  // TIMER
+  private startTime = 0;
+  private elapsedTime = 0;
+  private timerText!: Phaser.GameObjects.Text;
+  private gameFinished = false;
+
   constructor() {
     super({ key: 'GameScene' });
   }
@@ -24,6 +30,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.gameFinished = false;
     this.successSound = this.sound.add('success');
     this.victorySound = this.sound.add('victory');
 
@@ -35,6 +42,23 @@ export class GameScene extends Phaser.Scene {
     this.createBoxes();
     this.createShapes();
     this.setupDrag();
+
+    // INICIAR TIMER
+    this.startTime = this.time.now;
+
+    this.timerText = this.add.text(20, 20, 'Tiempo: 0.0s', {
+      fontSize: '24px',
+      color: '#ffffff'
+    });
+  }
+
+  update() {
+    if (this.gameFinished) return; // detener actualización
+
+    const currentTime = this.time.now;
+    this.elapsedTime = (currentTime - this.startTime) / 1000;
+
+    this.timerText.setText(`Tiempo: ${this.elapsedTime.toFixed(1)}s`);
   }
 
   // COLORES
@@ -169,8 +193,21 @@ export class GameScene extends Phaser.Scene {
 
   // VICTORIA
   private showVictory() {
+    this.gameFinished = true; // Detener timer
+
     this.victorySound.play();
-    
+
+    // detener tiempo final
+    const finalTime = this.elapsedTime.toFixed(1);
+
+    // guardar mejor tiempo
+    const best = localStorage.getItem('bestTime');
+    if (!best || parseFloat(finalTime) < parseFloat(best)) {
+      localStorage.setItem('bestTime', finalTime);
+    }
+
+    const bestTime = localStorage.getItem('bestTime');
+
     const overlay = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
 
     this.add.text(400, 200, '¡VICTORIA!', {
@@ -179,24 +216,34 @@ export class GameScene extends Phaser.Scene {
       fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    const retry = this.add.rectangle(400, 350, 220, 60, 0x4caf50)
+    this.add.text(400, 270, `Tiempo: ${finalTime}s`, {
+      fontSize: '32px',
+      color: '#ffffff'
+    }).setOrigin(0.5);
+
+    this.add.text(400, 310, `Mejor tiempo: ${bestTime}s`, {
+      fontSize: '24px',
+      color: '#00ffcc'
+    }).setOrigin(0.5);
+
+    const retry = this.add.rectangle(400, 380, 220, 60, 0x4caf50)
       .setInteractive()
       .on('pointerdown', () => {
         this.scene.restart();
       });
 
-    this.add.text(400, 350, 'Reintentar', {
+    this.add.text(400, 380, 'Reintentar', {
       fontSize: '28px',
       color: '#ffffff'
     }).setOrigin(0.5);
 
-    const menu = this.add.rectangle(400, 430, 220, 60, 0x2196f3)
+    const menu = this.add.rectangle(400, 460, 220, 60, 0x2196f3)
       .setInteractive()
       .on('pointerdown', () => {
         this.scene.start('MenuScene');
       });
 
-    this.add.text(400, 430, 'Menú', {
+    this.add.text(400, 460, 'Menú', {
       fontSize: '28px',
       color: '#ffffff'
     }).setOrigin(0.5);
