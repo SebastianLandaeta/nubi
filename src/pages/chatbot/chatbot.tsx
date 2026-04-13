@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 // Imágenes
 import cloudsTop from "./assets/clouds-top.png";
 import cloudsBottom from "./assets/clouds-bottom.png";
+import nubi1 from "./assets/nubi-1.png";
+import nubi2 from "./assets/nubi-2.png";
 
 // Estilos
 import "./chatbot.css";
@@ -37,6 +39,9 @@ export default function Chatbot() {
 
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   const ai = new GoogleGenAI({ apiKey });
+
+  // Para alternar entre dos imágenes de Nubi y dar más vida al chat
+  let modelCount = 0;
 
   const generateWithFallback = async (history: any[]) => {
     try {
@@ -137,14 +142,22 @@ export default function Chatbot() {
     window.speechSynthesis.cancel();
 
     const voices = await waitForVoices();
-    const marceloVoice = voices.find((v) =>
-      v.name.toLowerCase().includes("marcelo")
-    );
+
+    // Buscar español
+    const spanishVoices = voices.filter(v => v.lang.startsWith("es"));
+
+    // Intentar buscar voz masculina
+    let selectedVoice =
+      spanishVoices.find(v => v.name.toLowerCase().includes("male")) ||
+      spanishVoices.find(v => v.name.toLowerCase().includes("mascul")) ||
+      spanishVoices[0]; // fallback
 
     const utterance = new SpeechSynthesisUtterance(text);
-    if (marceloVoice) {
-      utterance.voice = marceloVoice;
+
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
     }
+
     utterance.lang = "es-ES";
     utterance.rate = 0.9;
     utterance.pitch = 1;
@@ -284,24 +297,44 @@ export default function Chatbot() {
 
       <div className="chat-container">
         <div className="messages">
-          {messages.map((msg, index) => (
-            <div key={index} className={`message ${msg.role}`}>
-              <div className="bubble">
-                {msg.content}
-                <button
-                  className="speak-btn"
-                  onClick={() => speak(msg.content)}
-                >
-                  🔊
+          {messages.map((msg, index) => {
+            const isModel = msg.role === "model";
+
+            let nubiImage = nubi1;
+            if (isModel) {
+              nubiImage = modelCount % 2 === 0 ? nubi1 : nubi2;
+              modelCount++;
+            }
+
+            return (
+              <div key={index} className={`message ${msg.role}`}>
+                {isModel && (
+                  <img
+                    src={nubiImage}
+                    alt="Nubi"
+                    className="nubi-avatar"
+                    draggable={false}
+                  />
+                )}
+
+                <div className="bubble">
+                  {msg.content}
+                  <button
+                    className="speak-btn"
+                    onClick={() => speak(msg.content)}
+                  >
+                    🔊
                 </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {loading && (
             <div className="message model">
+              <img src={nubi1} className="nubi-avatar" />
               <div className="bubble typing">
-                Nubi está pensando... 🤖💭
+                Nubi está pensando...
               </div>
             </div>
           )}
@@ -311,7 +344,6 @@ export default function Chatbot() {
 
         <div className="input-area">
           <input
-            id="input"
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -330,9 +362,8 @@ export default function Chatbot() {
             {isRecording ? "⏹️" : "🎤"}
           </button>
 
-          <button onClick={handleSend} disabled={loading || isRecording}>
-            Enviar
-          </button>
+          <button onClick={handleSend} disabled={loading || isRecording}>Enviar</button>
+          
         </div>
       </div>
 

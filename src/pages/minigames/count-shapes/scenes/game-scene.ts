@@ -75,7 +75,7 @@ export class GameScene extends Phaser.Scene {
     this.timerText.setText(`Tiempo: ${this.elapsedTime.toFixed(1)}s`);
   }
 
-  // 🔁 Nueva ronda
+  // Nueva ronda
   private startRound() {
 
     if (this.currentRound > this.totalRounds) {
@@ -94,7 +94,7 @@ export class GameScene extends Phaser.Scene {
     this.roundText.setText(`Ronda: ${this.currentRound}/${this.totalRounds}`);
   }
 
-  // 🎲 Número
+  // Número
   private generateNumber(): number {
     let num;
 
@@ -106,7 +106,7 @@ export class GameScene extends Phaser.Scene {
     return num;
   }
 
-  // 🧺 Caja
+  // Caja
   private drawBox() {
     this.add.rectangle(400, 220, 320, 220, 0xffffff)
       .setStrokeStyle(4, 0x000000);
@@ -117,7 +117,7 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5);
   }
 
-  // 🔺 Figuras
+  // Figuras
   private drawShapes(count: number) {
 
     const positions = [
@@ -151,7 +151,7 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  // 🔢 Opciones
+  // Opciones
   private createOptions() {
     for (let i = 1; i <= 9; i++) {
 
@@ -169,7 +169,7 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  // ✅ Validar
+  // Validar
   private checkAnswer(value: number) {
 
     this.options.forEach(o => o.disableInteractive());
@@ -215,7 +215,7 @@ export class GameScene extends Phaser.Scene {
 
     const finalTime = this.elapsedTime.toFixed(1);
 
-    // 🥇 mejor tiempo por modo
+    // mejor tiempo por modo
     const storageKey = `bestTime_${this.totalRounds}`;
     const best = localStorage.getItem(storageKey);
 
