@@ -17,7 +17,7 @@ export class GameScene extends Phaser.Scene {
   private currentRound = 1;
   private roundText!: Phaser.GameObjects.Text;
 
-  // ⏱️ TIMER
+  // TIMER
   private startTime = 0;
   private elapsedTime = 0;
   private timerText!: Phaser.GameObjects.Text;
@@ -197,7 +197,7 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  // 💬 Feedback
+  // Feedback
   private showFeedback(text: string, color: number) {
     const t = this.add.text(400, 380, text, {
       fontSize: '40px',
@@ -207,9 +207,9 @@ export class GameScene extends Phaser.Scene {
     this.time.delayedCall(700, () => t.destroy());
   }
 
-  // 🏁 FIN DEL JUEGO
+  // FIN DEL JUEGO
   private showGameOver() {
-    this.gameFinished = true; // 🛑 detener timer
+    this.gameFinished = true; // detener timer
 
     this.sound.play('victory');
 
@@ -264,7 +264,7 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5);
   }
 
-  // 🧹 Limpiar
+  // Limpiar
   private clearScene() {
     this.shapes.forEach(s => s.destroy());
     this.options.forEach(o => o.destroy());

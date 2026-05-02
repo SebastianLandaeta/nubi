@@ -168,8 +168,8 @@ export default function Chatbot() {
   // filtro infantil
   const isSafeForKids = (text: string) => {
     const forbiddenWords = [
-      "sexo",
-      "sexual",
+      "violación",
+      "pornografía",
       "violencia",
       "matar",
       "arma",
