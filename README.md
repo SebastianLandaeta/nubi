@@ -1,73 +1,15 @@
-# React + TypeScript + Vite
+# Nubi
+Nubi es un agente inteligente para el desarrollo de habilidades congnitivas en niños de etapa preescolar. Fue realizado por mi persona como trabajo de grado para optar al título de Ingeniero en Informática. Este sistema integra un chatbot por media de la API de Gemini, y minijuegos educativos hechos en Phaser.js.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Instalación
+Se instala como cualquier proyecto React, pero antes de ejecutar el sistema es necesario agregar una API KEY de Google AI. Se debe generar un archivo llamado ".env" en cual va en la raíz del proyecto:
 
-Currently, two official plugins are available:
+<img width="440" height="472" alt="image" src="https://github.com/user-attachments/assets/83f6feb7-5e37-475d-a56e-3b03b7b893ed" />
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+En ese archivo hay que crear una variable *VITE_GEMINI_API_KEY* y asignarle la API KEY creada, sin comillas ni punto y coma:
 
-## React Compiler
+<img width="645" height="51" alt="image" src="https://github.com/user-attachments/assets/d4cfb817-e5fc-4452-ac8d-91c07b0f28c5" />
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Documentación
+El manual de usuario y el trabajo de grado del proyecto se encuentran en la carpeta `docs`:
+<img width="432" height="141" alt="image" src="https://github.com/user-attachments/assets/96dfe2b7-31df-414d-bc09-874935fe31ee" />
