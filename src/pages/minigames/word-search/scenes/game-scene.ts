@@ -32,7 +32,7 @@ export class GameScene extends Phaser.Scene {
   private currentHighlight!: { row: number; col: number }[];
   private permanentHighlights!: { row: number; col: number }[];
   private startTime!: number;
-  private elapsedTime!: number;
+  private elapsedTime: number = 0;
   private timerText!: Phaser.GameObjects.Text | null;
   private gameFinished!: boolean;
 
@@ -191,6 +191,7 @@ export class GameScene extends Phaser.Scene {
   update() {
     if (!this.gameFinished && this.timerText) {
       const seconds = (Date.now() - this.startTime) / 1000;
+      this.elapsedTime = seconds;
       this.timerText.setText(`Tiempo: ${seconds.toFixed(1)}s`);
     }
   }
@@ -471,7 +472,7 @@ export class GameScene extends Phaser.Scene {
   private showVictoryMessage() {
     this.gameFinished = true;
 
-    const finalTime = ((Date.now() - this.startTime) / 1000).toFixed(1);
+    const finalTime = this.elapsedTime.toFixed(1);
 
     // 🔑 clave única por modo
     const storageKey = `bestTime_sopa_${this.difficulty}_${this.gridSize}`;
@@ -487,7 +488,7 @@ export class GameScene extends Phaser.Scene {
     // sonido
     this.victorySound.play();
 
-    const overlay = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7)
+    this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7)
       .setDepth(10)
       .setInteractive();
 
@@ -513,7 +514,7 @@ export class GameScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setDepth(11);
 
-    const button = this.add.rectangle(400, 420, 220, 60, 0x4caf50)
+    this.add.rectangle(400, 420, 220, 60, 0x4caf50)
       .setInteractive()
       .setDepth(11)
       .on('pointerdown', () => {

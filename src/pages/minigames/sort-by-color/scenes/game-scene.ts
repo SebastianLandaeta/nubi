@@ -208,7 +208,7 @@ export class GameScene extends Phaser.Scene {
 
     const bestTime = localStorage.getItem('bestTime');
 
-    const overlay = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
+    this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
 
     this.add.text(400, 200, '¡VICTORIA!', {
       fontSize: '64px',
@@ -226,7 +226,7 @@ export class GameScene extends Phaser.Scene {
       color: '#00ffcc'
     }).setOrigin(0.5);
 
-    const retry = this.add.rectangle(400, 380, 220, 60, 0x4caf50)
+    this.add.rectangle(400, 380, 220, 60, 0x4caf50)
       .setInteractive()
       .on('pointerdown', () => {
         this.scene.restart();
@@ -237,7 +237,7 @@ export class GameScene extends Phaser.Scene {
       color: '#ffffff'
     }).setOrigin(0.5);
 
-    const menu = this.add.rectangle(400, 460, 220, 60, 0x2196f3)
+    this.add.rectangle(400, 460, 220, 60, 0x2196f3)
       .setInteractive()
       .on('pointerdown', () => {
         this.scene.start('MenuScene');

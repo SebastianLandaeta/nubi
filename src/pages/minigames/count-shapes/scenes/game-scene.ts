@@ -245,7 +245,7 @@ export class GameScene extends Phaser.Scene {
       color: '#00ffcc'
     }).setOrigin(0.5);
 
-    const retry = this.add.rectangle(400, 400, 240, 70, 0x4caf50)
+    this.add.rectangle(400, 400, 240, 70, 0x4caf50)
       .setInteractive()
       .on('pointerdown', () => this.scene.restart());
 
@@ -254,7 +254,7 @@ export class GameScene extends Phaser.Scene {
       color: '#fff'
     }).setOrigin(0.5);
 
-    const menu = this.add.rectangle(400, 480, 240, 70, 0x2196f3)
+    this.add.rectangle(400, 480, 240, 70, 0x2196f3)
       .setInteractive()
       .on('pointerdown', () => this.scene.start('MenuScene'));
 
