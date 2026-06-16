@@ -24,7 +24,7 @@ export default function About() {
                         NUBI es un agente inteligente para la enseñanza en niños, el cual puede conversar con ellos, y posee minijuegos para hacer del aprendizaje una experiencia divertida.
                     </p>
                 </div>
-                <img src={characterTop} alt="Personaje Superior" className="character-top" />
+                <img src={characterTop} alt="Personaje Superior" className="character-top" draggable={false} />
             </div>
 
             <div className="row">
@@ -33,7 +33,7 @@ export default function About() {
                     <p>
                         NUBI fue creado por Sebastián Landaeta, estudiante de Ingeniería Informática de la UNEG, como su proyecto de grado.
                     </p>
-                    <img src={developer} alt="Sebastián Landaeta" className="developer" />
+                    <img src={developer} alt="Sebastián Landaeta" className="developer" draggable={false} />
                 </div>
 
                 <div className="objective">
@@ -41,7 +41,7 @@ export default function About() {
                     <p>
                         Hacer uso de la inteligencia artificial y la gamificación para facilitar el aprendizaje en niños, y así contribuir a la educación de una manera innovadora y atractiva.
                     </p>
-                    <img src={characterBottom} alt="Personaje Inferior" className="character-bottom" />
+                    <img src={characterBottom} alt="Personaje Inferior" className="character-bottom" draggable={false} />
                 </div>
             </div>
 

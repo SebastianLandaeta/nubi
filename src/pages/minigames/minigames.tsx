@@ -51,19 +51,19 @@ export default function MiniGames() {
         >
           <Link to="/minijuegos/sopa-de-letras">
             <button className="minigame-button">
-              <img src={wsLogo} alt="Sopa de Letras" />
+              <img src={wsLogo} alt="Sopa de Letras" draggable={false}/>
             </button>
           </Link>
 
           <Link to="/minijuegos/ordenar-por-color">
             <button className="minigame-button">
-              <img src={sbcLogo} alt="Ordenar por Color" />
+              <img src={sbcLogo} alt="Ordenar por Color" draggable={false} />
             </button>
           </Link>
 
           <Link to="/minijuegos/contar-figuras">
             <button className="minigame-button">
-              <img src={csLogo} alt="Asociar Números" />
+              <img src={csLogo} alt="Asociar Números" draggable={false} />
             </button>
           </Link>
         </div>
