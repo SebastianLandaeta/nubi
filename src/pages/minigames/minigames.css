@@ -38,10 +38,15 @@
 }
 
 /* Cada slide */
-.minigames-track a {
+.minigame-slide {
   flex: 0 0 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.minigame-slide .minigame-button {
+  width: 150px;
 }
 
 /* BOTÓN */
@@ -90,7 +95,7 @@
     
     background: transparent;
     border: none;
-    font-size: 3rem;
+    font-size: 3.5rem;
     color: #9ca3af;
     cursor: pointer;
     z-index: 10;
@@ -117,7 +122,7 @@
     justify-content: center;
   }
 
-  .minigames-track a {
+  .minigame-slide {
     flex: unset;
   }
 }

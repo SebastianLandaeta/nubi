@@ -2,7 +2,7 @@
 import Navbar from "../../shared/components/navbar";
 import Footer from "../../shared/components/footer";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Imágenes
 import cloudsBottom from "./assets/clouds-bottom.png";
@@ -16,6 +16,7 @@ import "./minigames.css";
 
 export default function MiniGames() {
   const [index, setIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const totalGames = 3;
 
@@ -26,6 +27,25 @@ export default function MiniGames() {
   const prev = () => {
     setIndex((prev) => (prev > 0 ? prev - 1 : prev));
   };
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 768px)");
+
+    const updateState = (event: MediaQueryListEvent | MediaQueryList) => {
+      const mobile = event.matches;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setIndex(0);
+      }
+    };
+
+    updateState(media);
+    media.addEventListener("change", updateState);
+
+    return () => {
+      media.removeEventListener("change", updateState);
+    };
+  }, []);
 
   return (
     <div className="minijuegos">
@@ -47,25 +67,25 @@ export default function MiniGames() {
 
         <div
           className="minigames-track"
-          style={{ transform: `translateX(-${index * 100}%)` }}
+          style={isMobile ? { transform: `translateX(-${index * 100}%)` } : undefined}
         >
-          <Link to="/minijuegos/sopa-de-letras">
-            <button className="minigame-button">
-              <img src={wsLogo} alt="Sopa de Letras" draggable={false}/>
-            </button>
-          </Link>
+          <div className="minigame-slide">
+            <Link to="/minijuegos/sopa-de-letras" className="minigame-button">
+              <img src={wsLogo} alt="Sopa de Letras" draggable={false} />
+            </Link>
+          </div>
 
-          <Link to="/minijuegos/ordenar-por-color">
-            <button className="minigame-button">
+          <div className="minigame-slide">
+            <Link to="/minijuegos/ordenar-por-color" className="minigame-button">
               <img src={sbcLogo} alt="Ordenar por Color" draggable={false} />
-            </button>
-          </Link>
+            </Link>
+          </div>
 
-          <Link to="/minijuegos/contar-figuras">
-            <button className="minigame-button">
+          <div className="minigame-slide">
+            <Link to="/minijuegos/contar-figuras" className="minigame-button">
               <img src={csLogo} alt="Asociar Números" draggable={false} />
-            </button>
-          </Link>
+            </Link>
+          </div>
         </div>
 
         <button className="arrow right" onClick={next}>
